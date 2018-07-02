@@ -7,6 +7,6 @@ for i in range(0, 5):
 		print(c3 + c5)
 		return
 	n -= 3
-	c3++
+	c3 += 1
 
 print(-1)
