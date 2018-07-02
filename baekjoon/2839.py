@@ -2,7 +2,7 @@ n = int(input())
 c3 = 0
 c5 = 0
 result = -1;
-for i in range(0, 5):
+while n >= 0:
 	if(n % 5 == 0):
 		c5 = n // 5
 		result = c3 + c5
