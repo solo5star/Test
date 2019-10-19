@@ -5,7 +5,7 @@ void maptime(void);
 void killnum(int ded,int cha);
 void mapscan(void);
 	
-int maps[200][200][2]={0,};	
+int maps[2000][2000][2]={0,};	
 int size=1;
 int start=1;
 int main(void) {
@@ -20,7 +20,7 @@ int main(void) {
 		maps[a-1][b-1][0]=i;
 	}
 	/*
-	printmaps();
+	printmaps();10
 	maptime();
 	printf("\n");
 	mapscan();
@@ -29,6 +29,7 @@ int main(void) {
 	mapscan();
 	printf("\n");
 	printmaps();*/
+	mapscan();
 	for(;;){
 		for(i=0;i<size;i++){
 			for(y=0;y<size;y++){
@@ -39,10 +40,11 @@ int main(void) {
 		if(wait==0)break;
 		maptime();
 		mapscan();
+		//printmaps();
+		//printf("\n");
 		count++;
 		wait=0;
 	}
-	//printmaps();
 	printf("%d",count);
 	return 0;
 }
