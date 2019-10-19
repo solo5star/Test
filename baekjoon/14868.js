@@ -1,6 +1,4 @@
-var fs, input;
-fs = requilre("fs");
-input = fs.readFileSync("/dev/stdin").toString().split("\n");
+var input = require('fs').readFileSync('/dev/stdin').toString().trim();
 
 console.log(solution(input));
 
