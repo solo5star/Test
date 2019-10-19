@@ -5,7 +5,7 @@ void maptime(void);
 void killnum(int ded,int cha);
 void mapscan(void);
 	
-int maps[2000][2000][2]={0,};	
+int maps[200][200][2]={0,};	
 int size=1;
 int start=1;
 int main(void) {
