@@ -1,3 +1,9 @@
+var fs, input;
+fs = requilre("fs");
+input = fs.readFileSync("/dev/stdin").toString().split("\n");
+
+console.log(solution(input));
+
 function coordHash(x, y){
 	return 2000 * x + y;
 }
