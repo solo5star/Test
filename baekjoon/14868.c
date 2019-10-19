@@ -17,7 +17,7 @@ int main(void) {
 	scanf("%d",&start);
 	for(i=1;i<=start;i++){
 		scanf("%d %d",&a,&b);
-		maps[a-1][b-1][0]=i;
+		maps[a][b][0]=i;
 	}
 	/*
 	printmaps();10
@@ -31,8 +31,8 @@ int main(void) {
 	printmaps();*/
 	mapscan();
 	for(;;){
-		for(i=0;i<size;i++){
-			for(y=0;y<size;y++){
+		for(i=1;i<=size;i++){
+			for(y=1;y<=size;y++){
 				if(maps[i][y][0]!=0)
 					if(maps[i][y][0]<start)wait=1;
 			}
@@ -51,8 +51,8 @@ int main(void) {
 	
 void printmaps(void){
 	int i,y;
-	for(i=0;i<size;i++){
-		for(y=0;y<size;y++){
+	for(i=1;i<=size;i++){
+		for(y=1;y<=size;y++){
 			printf("%d ",maps[i][y][0]);
 		}
 		printf("띄우기\n");
@@ -61,19 +61,19 @@ void printmaps(void){
 
 void maptime(void){
 	int i,y;
-	for(i=0;i<size;i++){
-		for(y=0;y<size;y++){
+	for(i=1;i<=size;i++){
+		for(y=1;y<=size;y++){
 			if(maps[i][y][0]>0){
 				maps[i+1][y][1]=maps[i][y][0];
 				maps[i][y+1][1]=maps[i][y][0];
-				if(i>0)maps[i-1][y][1]=maps[i][y][0];
-				if(y>0)maps[i][y-1][1]=maps[i][y][0];
+				maps[i-1][y][1]=maps[i][y][0];
+				maps[i][y-1][1]=maps[i][y][0];
 			}
 		}
 	}
 	
-	for(i=0;i<size;i++){
-		for(y=0;y<size;y++){
+	for(i=1;i<=size;i++){
+		for(y=1;y<=size;y++){
 				if(maps[i][y][0]==0)maps[i][y][0]=maps[i][y][1];
 			
 		}
@@ -85,28 +85,28 @@ void mapscan(void){
 	int i,y;
 	int deadnum,changnum;
 	int ok=0;;
-	for(i=0;i<size;i++){
-		for(y=0;y<size;y++){
+	for(i=1;i<=size;i++){
+		for(y=1;y<=size;y++){
 			if(maps[i][y][0]!=0){
 				if(maps[i][y][0]<maps[i+1][y][0]){
 					ok=1;
 					deadnum=maps[i][y][0];
 					changnum=maps[i+1][y][0];
 				}
-				if(ok==0)	
+				//if(ok==0)	
 					if(maps[i][y][0]<maps[i][y+1][0]){
 						ok=1;
 						deadnum=maps[i][y][0];
 						changnum=maps[i][y+1][0];
 					}
-				if(ok==0)	
+				//if(ok==0)	
 					if(i>0)
 						if(maps[i][y][0]<maps[i-1][y][0]){
 						ok=1;
 						deadnum=maps[i][y][0];
 						changnum=maps[i-1][y][0];
 					}
-				if(ok==0)	
+				//if(ok==0)	
 					if(i>0)
 						if(maps[i][y][0]<maps[i][y-1][0]){
 						ok=1;
@@ -128,8 +128,8 @@ void mapscan(void){
 
 void killnum(int ded,int cha){
 	int i,y;
-	for(i=0;i<size;i++){
-		for(y=0;y<size;y++){
+	for(i=1;i<=size;i++){
+		for(y=1;y<=size;y++){
 			if(maps[i][y][0]==ded){
 				maps[i][y][0]=cha;
 			}
