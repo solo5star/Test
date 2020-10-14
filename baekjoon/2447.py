@@ -4,20 +4,21 @@ n = int(sys.stdin.readline())
 
 def level(x, y, divider):
 	divider //= 3
-	while True:
+	while divider > 1:
 		if (x // divider) % 3 == 1 and (y // divider) % 3 == 1:
 			return divider
-		elif divider == 1:
-			return divider
 		else:
-			return level(x, y, divider)
+			divider //= 3
+	
+	return 1
 
 def isMidpos(x, y, lv):
 	return (x // lv) % 3 == 1 and (y // lv) % 3 == 1
 
 for y in range(n):
 	for x in range(n):
-		DoNotPrint = isMidpos(x, y, level(x, y, n))
+		lv = level(x, y, n)
+		DoNotPrint = (x // lv) % 3 == 1 and (y // lv) % 3 == 1
 		# print(level(x, y, n), end="")
 		print("*" if not DoNotPrint else " ", end="")
 	print()
