@@ -2,7 +2,7 @@ import sys
 
 s = sys.stdin.readline().strip().upper()
 dic = {}
-for c in range(s):
+for c in s:
 	if c in dic:
 		dic[c] += 1
 	else:
