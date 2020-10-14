@@ -4,6 +4,8 @@ n, m, v = map(int, sys.stdin.readline().split())
 
 graph = {}
 
+graph[v] = [v]
+
 for i in range(m):
 	v1, v2 = map(int, sys.stdin.readline().split())
 	if v1 in graph:
