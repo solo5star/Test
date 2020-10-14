@@ -1,7 +1,5 @@
-import sys
-
 while True:
 	try:
-		print(sum(map(int, sys.stdin.readline().split())))
+		print(sum(map(int, input().split())))
 	except:
 		break
