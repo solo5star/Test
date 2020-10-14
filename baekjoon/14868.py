@@ -3,7 +3,7 @@ import sys
 size, count = map(int, sys.stdin.readline().split())
 
 world = [[0 for j in range(size)] for i in range(size)]
-world_searched = [[0 for j in range(size)] for i in range(size)]
+world_spreaded = [[0 for j in range(size)] for i in range(size)]
 
 parents = {}
 
@@ -30,26 +30,14 @@ def checkAllUnioned():
 	
 	return True
 
-def getAdjacent(x, y):
-	width = len(world)
-	height = len(world[0])
-
-	ret = []
-	if x > 0:
-		ret.append((x - 1, y))
-	if x < width - 1:
-		ret.append((x + 1, y))
-	if y > 0:
-		ret.append((x, y - 1))
-	if y < height - 1:
-		ret.append((x, y + 1))
-
-	return ret
-
 def spread(nextCoords):
 	_nextCoords = []
 	for x, y in nextCoords:
-		for _x, _y in getAdjacent(x, y):
+		for _x, _y in [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]:
+			# Out of bound
+			if(_x < 0 or _y < 0 or _x >= size or _y >= size):
+				continue
+
 			# spread culture
 			if world[_y][_x] == world[y][x]:
 				continue
@@ -58,9 +46,15 @@ def spread(nextCoords):
 				# find empty tile! spread
 				world[_y][_x] = world[y][x]
 				# .. and spread next loop
-				_nextCoords.append((_x, _y))
+				if world_spreaded[_y][_x] == 0:
+					_nextCoords.append((_x, _y))
+					world_spreaded[_y][_x] = 0
 
-				for __x, __y in getAdjacent(_x, _y):
+				for __x, __y in [(_x - 1, _y), (_x + 1, _y), (_x, _y - 1), (_x, _y + 1)]:
+					# Out of bound
+					if(__x < 0 or __y < 0 or __x >= size or __y >= size):
+						continue
+
 					if world[__y][__x] != 0:
 						# find adjacent! union us
 						union(world[_y][_x], world[__y][__x])
@@ -77,24 +71,27 @@ def spread(nextCoords):
 # 	print("----------")
 # 	input()
 
-nextCoords = []
-yearElappsed = 0
+def solution():
+	nextCoords = []
+	yearElappsed = 0
 
-# Initialize world
-for i in range(count):
-	x, y = map(int, sys.stdin.readline().strip().split())
-	x, y = x - 1, y - 1
-	# id of culture
-	world[y][x] = i + 1
-	# spread next year
-	nextCoords.append((x, y))
+	# Initialize world
+	for i in range(count):
+		x, y = map(int, sys.stdin.readline().strip().split())
+		x, y = x - 1, y - 1
+		# id of culture
+		world[y][x] = i + 1
+		# spread next year
+		nextCoords.append((x, y))
 
-while True:
-	nextCoords = spread(nextCoords)
-	yearElappsed += 1
+	while True:
+		nextCoords = spread(nextCoords)
+		yearElappsed += 1
 
-	# printWorld(world)
+		# printWorld(world)
 
-	if checkAllUnioned():
-		print(yearElappsed)
-		break
+		if checkAllUnioned():
+			print(yearElappsed)
+			break
+
+solution()
