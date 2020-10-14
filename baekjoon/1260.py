@@ -3,13 +3,18 @@ import sys
 n, m, v = map(int, sys.stdin.readline().split())
 
 graph = {}
-for i in range(1, n + 1):
-	graph[i] = []
 
 for i in range(m):
 	v1, v2 = map(int, sys.stdin.readline().split())
-	graph[v1].append(v2)
-	graph[v2].append(v1)
+	if v1 in graph:
+		graph[v1].append(v2)
+	else:
+		graph[v1] = [v2]
+	
+	if v2 in graph:
+		graph[v2].append(v1)
+	else:
+		graph[v2] = [v1]
 
 for i in graph:
 	graph[i].sort()
