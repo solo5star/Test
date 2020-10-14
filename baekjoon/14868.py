@@ -3,6 +3,7 @@ import sys
 size, count = map(int, sys.stdin.readline().split())
 
 world = [[0 for j in range(size)] for i in range(size)]
+world_searched = [[0 for j in range(size)] for i in range(size)]
 
 parents = {}
 
@@ -45,17 +46,9 @@ def getAdjacent(x, y):
 
 	return ret
 
-def getCoords():
-	ret = []
-	for y in range(len(world)):
-		for x in range(len(world[0])):
-			if world[y][x] != 0:
-				ret.append((x, y))
-	
-	return ret
-
-def spread():
-	for x, y in getCoords():
+def spread(nextCoords):
+	_nextCoords = []
+	for x, y in nextCoords:
 		for _x, _y in getAdjacent(x, y):
 			# spread culture
 			if world[_y][_x] == world[y][x]:
@@ -64,22 +57,43 @@ def spread():
 			elif world[_y][_x] == 0:
 				# find empty tile! spread
 				world[_y][_x] = world[y][x]
+				# .. and spread next loop
+				_nextCoords.append((_x, _y))
 
 				for __x, __y in getAdjacent(_x, _y):
-					# search adjacent
-					if world[__y][__x]:
+					if world[__y][__x] != 0:
 						# find adjacent! union us
 						union(world[_y][_x], world[__y][__x])
+	
+	return _nextCoords
 
+# def printWorld(world):
+# 	print("----------")
+# 	for row in world:
+# 		print(row)
+
+# 	print("----------")
+# 	print(parents)
+# 	print("----------")
+# 	input()
+
+nextCoords = []
+yearElappsed = 0
+
+# Initialize world
 for i in range(count):
 	x, y = map(int, sys.stdin.readline().strip().split())
+	x, y = x - 1, y - 1
 	# id of culture
-	world[y - 1][x - 1] = i + 1
+	world[y][x] = i + 1
+	# spread next year
+	nextCoords.append((x, y))
 
-yearElappsed = 0
 while True:
-	spread()
+	nextCoords = spread(nextCoords)
 	yearElappsed += 1
+
+	# printWorld(world)
 
 	if checkAllUnioned():
 		print(yearElappsed)
