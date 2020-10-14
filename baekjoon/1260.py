@@ -45,12 +45,12 @@ def bfs(v):
 			bfs_queue.append(_v)
 			# prevent queue duplicate
 			bfs_visited.add(_v)
-	
-	while len(bfs_queue) > 0:
-		bfs(bfs_queue.pop(0))
 
 dfs(v)
 bfs(v)
+
+while len(bfs_queue) > 0:
+	bfs(bfs_queue.pop(0))
 
 print(' '.join(map(str, dfs_result)))
 print(' '.join(map(str, bfs_result)))
