@@ -18,14 +18,18 @@ for i in range(len(strlist[0])):
 	dupcheck.add(colstr)
 
 def cycle():
-	for colstr in list(dupcheck):
+	global dupcheck
+	_dupcheck = set()
+	for colstr in dupcheck:
 		colstr = colstr[1:]
 
-		if colstr in dupcheck:
+		if colstr in _dupcheck:
 			return False
 		
-		dupcheck.add(colstr)
+		_dupcheck.add(colstr)
 	
+	dupcheck = _dupcheck
+	count += 1
 	return True
 
 while True:
@@ -34,8 +38,6 @@ while True:
 
 	if cycle() == False:
 		break
-
-	count += 1
 
 	if len(strlist) == 0:
 		break
