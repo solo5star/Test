@@ -61,15 +61,15 @@ def spread(nextCoords):
 	
 	return _nextCoords
 
-# def printWorld(world):
-# 	print("----------")
-# 	for row in world:
-# 		print(row)
+def printWorld(world):
+	print("----------")
+	for row in world:
+		print(row)
 
-# 	print("----------")
-# 	print(parents)
-# 	print("----------")
-# 	input()
+	print("----------")
+	print(parents)
+	print("----------")
+	input()
 
 def solution():
 	nextCoords = []
