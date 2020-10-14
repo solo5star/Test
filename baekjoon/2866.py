@@ -3,19 +3,24 @@ import sys
 row, col = map(int, sys.stdin.readline().split())
 
 strlist = []
+dupcheck = set()
 count = 0
 
 for i in range(row):
 	strlist.append(sys.stdin.readline().strip())
 
+for i in range(len(strlist[0])):
+	colstr = []
+	for j in range(len(strlist)):
+		colstr.append(strlist[j][i])
+
+	colstr = ''.join(colstr)
+	dupcheck.add(colstr)
+
 def cycle():
-	dupcheck = set()
-	for i in range(len(strlist[0])):
-		colstr = []
-		for j in range(len(strlist)):
-			colstr.append(strlist[j][i])
-		
-		colstr = ''.join(colstr)
+	for colstr in list(dupcheck):
+		colstr = colstr[1:]
+
 		if colstr in dupcheck:
 			return False
 		
