@@ -8,7 +8,7 @@ for i in range(n):
 	inst = sys.stdin.readline().strip().split()
 	
 	if inst[0] == "push":
-		stack.append(int(inst[1]))
+		stack.append(inst[1])
 	elif inst[0] == "top":
 		print(stack[-1] if len(stack) == 0 else -1)
 	elif inst[0] == "size":
