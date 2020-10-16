@@ -1,4 +1,6 @@
 #include <iostream>
+#include <utility>
+#include <algorithm>
 #include <map>
 #include <queue>
 
@@ -56,7 +58,7 @@ void do_union() {
 
             if (outsideOfWorld(x_, y_)) continue;
 
-            if (world[y_][x_] != 0 && merge(world[y][x], world[y_][x_])) {
+            if (world[y_][x_] != 0 && world[y][x] != world[y_][x_] && merge(world[y][x], world[y_][x_])) {
                 k--;
             }
         }
