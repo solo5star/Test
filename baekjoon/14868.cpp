@@ -26,8 +26,8 @@ pair<int, int> near[] = {
     make_pair(0, 1)
 };
 
-int find(int a) {
-    return parents[a] == a ? a : find(parents[a]);
+inline int find(int a) {
+    return parents[a] == a ? a : (parents[a] = find(parents[a]));
 }
 
 bool merge(int a, int b) {
@@ -36,7 +36,6 @@ bool merge(int a, int b) {
 
     if (_a == _b) return false;
 
-    // cout << endl << "Merged[" << a << "," << b << "]" << endl;
     parents[_b] = _a;
     return true;
 }
@@ -98,7 +97,7 @@ void print() {
     cout << endl;
 }
 
-int main()
+int main1()
 {
     // Optimize cin, cout
     ios_base::sync_with_stdio(false);
