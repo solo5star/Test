@@ -34,7 +34,7 @@ bool merge(int a, int b) {
 
     if (_a == _b) return false;
 
-    cout << endl << "Merged[" << a << "," << b << "]" << endl;
+    // cout << endl << "Merged[" << a << "," << b << "]" << endl;
     parents[_b] = _a;
     return true;
 }
