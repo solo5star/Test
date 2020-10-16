@@ -97,7 +97,7 @@ void print() {
     cout << endl;
 }
 
-int main1()
+int main()
 {
     // Optimize cin, cout
     ios_base::sync_with_stdio(false);
