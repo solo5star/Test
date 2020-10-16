@@ -1,6 +1,7 @@
 #include <iostream>
 #include <map>
 #include <queue>
+#include <unordered_set>
 
 using namespace std;
 
@@ -9,14 +10,20 @@ int k, n;
 int yearElappsed = 0;
 
 // map
-int world[2001][2001];
+int world[2000][2000];
 
 // Union-Find
 int parents[100001];
 
 // Next civilization queue (BFS)
-queue<pair<int, int>> civil_queue;
-queue<pair<int, int>> union_queue;
+struct pair_hash {
+    inline size_t operator()(const pair<int, int>& v) const {
+        return v.second * 2000 + v.first;
+    }
+};
+
+unordered_set<pair<int, int>, pair_hash> civil_queue;
+unordered_set<pair<int, int>, pair_hash> union_queue;
 
 // Offsets
 pair<int, int> near[] = {
@@ -45,11 +52,9 @@ inline bool outsideOfWorld(int x, int y) {
 }
 
 void do_union() {
-    while (!union_queue.empty()) {
-        int x = union_queue.front().first;
-        int y = union_queue.front().second;
-
-        union_queue.pop();
+    for (auto it = union_queue.begin(); it != union_queue.end(); ++it) {
+        int x = it->first;
+        int y = it->second;
 
         for (int i = 0; i < 4; i++) {
             int x_ = x + near[i].first;
@@ -62,16 +67,16 @@ void do_union() {
                 k--;
             }
         }
-        civil_queue.push(make_pair(x, y));
+
+        civil_queue.insert(make_pair(x, y));
     }
+    union_queue.clear();
 }
 
 void do_civil() {
-    while (!civil_queue.empty()) {
-        int x = civil_queue.front().first;
-        int y = civil_queue.front().second;
-
-        civil_queue.pop();
+    for (auto it = civil_queue.begin(); it != civil_queue.end(); ++it) {
+        int x = it->first;
+        int y = it->second;
 
         for (int i = 0; i < 4; i++) {
             int x_ = x + near[i].first;
@@ -81,10 +86,11 @@ void do_civil() {
 
             if (world[y_][x_] == 0) {
                 world[y_][x_] = world[y][x];
-                union_queue.push(make_pair(x_, y_));
+                union_queue.insert(make_pair(x_, y_));
             }
         }
     }
+    civil_queue.clear();
 }
 
 int main()
@@ -101,7 +107,7 @@ int main()
         cin >> x >> y;
         x--; y--; // 0 base index
         world[y][x] = i; // i is civil id
-        union_queue.push(make_pair(x, y));
+        union_queue.insert(make_pair(x, y));
     }
 
     while (true) {
@@ -115,4 +121,6 @@ int main()
     }
 
     cout << yearElappsed;
+
+    return 0;
 }
