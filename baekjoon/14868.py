@@ -9,7 +9,7 @@ for i in range(k):
 
 points.sort()
 
-m = 1
+m = 0
 for i in range(k):
 	if i == 0:
 		continue
