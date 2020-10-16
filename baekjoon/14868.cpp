@@ -26,7 +26,7 @@ pair<int, int> near[] = {
     make_pair(0, 1)
 };
 
-inline int find(int a) {
+int find(int a) {
     return parents[a] == a ? a : (parents[a] = find(parents[a]));
 }
 
