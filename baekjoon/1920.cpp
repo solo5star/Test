@@ -1,3 +1,6 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <stdio.h>
 #include <iostream>
 #include <utility>
 #include <algorithm>
@@ -5,37 +8,32 @@
 
 using namespace std;
 
+int nums[100000];
+
 int main() {
-	ios_base::sync_with_stdio(false);
-	cin.tie(NULL);
-	cout.tie(NULL);
+	int n, m, a, search, i;
 
-	int* nums;
+	scanf("%d", &n);
 
-	int n, m, a;
-	cin >> n;
-
-	nums = new int[n];
-
-	for (int i = 0; i < n; i++) {
-		cin >> a;
+	for (i = 0; i < n; i++) {
+		scanf("%d", &a);
 		nums[i] = a;
 	}
 
 	sort(nums, nums+n);
 
-	cin >> m;
+	scanf("%d", &m);
 
-	for (int i = 0; i < m; i++) {
-		int search;
-		cin >> search;
+	for (i = 0; i < m; i++) {
+		scanf("%d", &search);
 
 		int low = 0;
 		int high = n;
+		int mid;
 		bool found = false;
 
 		while (low != high) {
-			int mid = (low + high) / 2;
+			mid = (low + high) / 2;
 
 			if (nums[mid] == search) {
 				found = true;
@@ -49,8 +47,6 @@ int main() {
 			}
 		}
 
-		cout << (found ? 1 : 0) << "\n";
+		printf("%d\n", found ? 1 : 0);
 	}
-
-	delete[] nums;
 }
