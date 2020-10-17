@@ -10,6 +10,10 @@ using namespace std;
 
 int nums[100000];
 
+int compare(const void* a, const void* b) {
+	return *((int*)a) - *((int*)b);
+}
+
 int main() {
 	int n, m, a, search, i;
 
@@ -20,7 +24,7 @@ int main() {
 		nums[i] = a;
 	}
 
-	sort(nums, nums+n);
+	qsort(nums, n, sizeof(int), compare);
 
 	scanf("%d", &m);
 
