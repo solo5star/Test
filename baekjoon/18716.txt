@@ -1,0 +1,38 @@
+mov B A
+and B 7
+
+shr 3
+
+mov D A
+not D
+
+mov E D
+shl E 1
+or D E
+
+mov E D
+shl E 2
+or D E
+
+mov E D
+shl E 4
+or D E
+
+mov E D
+shl E 8
+or D E
+
+mov E D
+shl E 16
+or D E
+
+mov E D
+shl E 32
+or D E
+
+shl D 1
+not D
+xor A D
+
+shl A 3
+or A B
