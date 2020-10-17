@@ -3,14 +3,11 @@
 #include <iostream>
 #include <utility>
 #include <algorithm>
-#include <math.h>
+#include <queue>
 
 using namespace std;
 
-// 0 : not searched
-// 1 : not prime
-// 2 : prime
-int nums[500001];
+queue<int> q;
 
 int main() {
 	ios_base::sync_with_stdio(false);
@@ -20,53 +17,15 @@ int main() {
 	int n;
 	cin >> n;
 
-	for (int i = 0; i < n; i++) {
-		nums[i] = i + 1;
+	for (int i = 1; i <= n; i++) {
+		q.push(i);
 	}
 
-	int i = 0;
-	int w = 1;
-	int c = n;
-	bool remove = true;
-
-	int previos = nums[i];
-	int first = 0;
-
-	while(true) {
-		if (remove) {
-			nums[i] = 0;
-			c--;
-
-			if (i == first) {
-				first += w;
-			}
-
-			if (c <= 1) {
-				break;
-			}
-		}
-
-		previos = nums[i];
-
-		i += w;
-		if (i >= n || nums[i] == 0) {
-			i = first;
-			w = w << 1;
-		}
-
-		// <-- print current array -->
-		/*
-		for (int j = 0; j < n; j++)
-			cout << nums[j] << " ";
-		cout << "\n";
-
-		for (int j = 0; j < n; j++)
-			cout << (i == j ? remove ? "'" : "^" : " ") << " ";
-		cout << "\n";
-		*/
-
-		remove = !remove;
+	while (q.size() > 1) {
+		q.pop();
+		q.push(q.front());
+		q.pop();
 	}
 
-	cout << previos;
+	cout << q.front();
 }
