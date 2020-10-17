@@ -54,13 +54,14 @@ int main() {
 			w = w << 1;
 		}
 
-		for (int j = 0; j < n; j++)
-			cout << nums[j] << " ";
-		cout << "\n";
+		// <-- print current array -->
+		// for (int j = 0; j < n; j++)
+		// 	cout << nums[j] << " ";
+		// cout << "\n";
 
-		for (int j = 0; j < n; j++)
-			cout << (i == j ? remove ? "'" : "^" : " ") << " ";
-		cout << "\n";
+		// for (int j = 0; j < n; j++)
+		// 	cout << (i == j ? remove ? "'" : "^" : " ") << " ";
+		// cout << "\n";
 
 		remove = !remove;
 	}
