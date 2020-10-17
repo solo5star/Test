@@ -22,7 +22,7 @@ int main() {
 
 	cin >> m;
 
-	for (int i = 0; i < n; i++) {
+	for (int i = 0; i < m; i++) {
 		cin >> a;
 		cout << (nums[a] ? 1 : 0) << "\n";
 	}
