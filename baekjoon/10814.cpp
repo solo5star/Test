@@ -30,7 +30,7 @@ int main() {
 		members[i] = make_pair(age, name);
 	}
 
-	sort(members, members + n, compare);
+	stable_sort(members, members + n, compare);
 
 	for (int i = 0; i < n; i++) {
 		cout << members[i].first << " " << members[i].second << "\n";
