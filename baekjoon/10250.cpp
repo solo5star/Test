@@ -22,7 +22,7 @@ int main() {
 		cin >> h >> w >> n;
 
 		cout << ((n - 1) % h) + 1;
-		w = (n / h) + 1;
+		w = ((n - 1) / h) + 1;
 		if (w < 10) cout << "0";
 		cout << w << "\n";
 	}
