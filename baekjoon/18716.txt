@@ -1,7 +1,7 @@
 mov B A
 and B 7
 
-shr 3
+shr A 3
 
 mov D A
 not D
