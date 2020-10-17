@@ -41,7 +41,7 @@ int main() {
 				first += w;
 			}
 
-			if (c == 1) {
+			if (c <= 1) {
 				break;
 			}
 		}
@@ -55,13 +55,15 @@ int main() {
 		}
 
 		// <-- print current array -->
-		// for (int j = 0; j < n; j++)
-		// 	cout << nums[j] << " ";
-		// cout << "\n";
+		/*
+		for (int j = 0; j < n; j++)
+			cout << nums[j] << " ";
+		cout << "\n";
 
-		// for (int j = 0; j < n; j++)
-		// 	cout << (i == j ? remove ? "'" : "^" : " ") << " ";
-		// cout << "\n";
+		for (int j = 0; j < n; j++)
+			cout << (i == j ? remove ? "'" : "^" : " ") << " ";
+		cout << "\n";
+		*/
 
 		remove = !remove;
 	}
