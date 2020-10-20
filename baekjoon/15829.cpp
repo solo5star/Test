@@ -18,9 +18,16 @@ int main() {
 	cin >> n;
 	cin >> s;
 
+	int dp[51];
+	dp[0] = 1;
+	dp[1] = 31;
+	for (int i = 2; i < n; i++) {
+		dp[i] = dp[i - 1] * 31;
+	}
+
 	int sum = 0;
 	for (int i = 0; i < n; i++) {
-		sum += (s[i] - 'a' + 1) * (int)pow(31, i);
+		sum += (s[i] - 'a' + 1) * dp[i];
 	}
 	sum %= 1234567891;
 
