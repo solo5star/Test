@@ -12,12 +12,23 @@ int main() {
 	cin.tie(NULL);
 	cout.tie(NULL);
 
-	int n1, n2, n3;
+	int n1, n2, n3, tmp;
 
 	while (true) {
 		cin >> n1 >> n2 >> n3;
 
 		if ((n1 | n2 | n3) == 0) break;
+
+		if (n1 > n3) {
+			tmp = n1;
+			n1 = n3;
+			n3 = tmp;
+		}
+		if (n2 > n3) {
+			tmp = n2;
+			n2 = n3;
+			n3 = tmp;
+		}
 
 		if (n1 * n1 + n2 * n2 == n3 * n3) {
 			cout << "right\n";
