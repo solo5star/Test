@@ -7,7 +7,7 @@
 
 using namespace std;
 
-short numbers[10000000];
+int numbers[10001];
 
 int main() {
 	ios_base::sync_with_stdio(false);
@@ -15,17 +15,16 @@ int main() {
 	cout.tie(NULL);
 
 	int n;
-	short number;
+	int number;
 	cin >> n;
 
 	for (int i = 0; i < n; i++) {
 		cin >> number;
-		numbers[i] = number;
+		numbers[number]++;
 	}
 
-	sort(numbers, numbers + n);
-
-	for (int i = 0; i < n; i++) {
-		cout << numbers[i] << "\n";
+	for (int i = 1; i <= n; i++) {
+		for(int j = 0; j < numbers[i]; j++)
+			cout << i << "\n";
 	}
 }
