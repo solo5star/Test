@@ -23,8 +23,9 @@ int main() {
 		numbers[number]++;
 	}
 
-	for (int i = 1; i <= n; i++) {
-		for(int j = 0; j < numbers[i]; j++)
+	for (int i = 1; i <= 10000; i++) {
+		for (int j = 0; j < numbers[i]; j++) {
 			cout << i << "\n";
+		}
 	}
 }
