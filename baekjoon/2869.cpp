@@ -15,15 +15,10 @@ int main() {
 	cin.tie(NULL);
 	cout.tie(NULL);
 
-	int current = 0, a, b, v, days = 1;
+	int a, b, v;
 	cin >> a >> b >> v;
 
-	while (true) {
-		current += a;
-		if (current >= v) break;
-		current -= b;
-		days++;
-	}
+	int days = (v - b) / (a - b);
 
 	cout << days;
 }
