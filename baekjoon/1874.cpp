@@ -12,7 +12,7 @@ using namespace std;
 
 int stack[100000];
 
-char history[100000];
+char history[200000];
 
 int historyIndex = 0;
 
