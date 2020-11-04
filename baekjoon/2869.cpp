@@ -16,5 +16,5 @@ int main() {
 	int a, b, v;
 	cin >> a >> b >> v;
 
-	cout << ((v - b) / (a - b)) + 1;
+	cout << (a == v ? 1 : ((v - b) / (a - b)) + 1);
 }
