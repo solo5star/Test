@@ -4,6 +4,7 @@
 #include <utility>
 #include <algorithm>
 #include <string>
+#include <math.h>
 
 using namespace std;
 
@@ -15,5 +16,5 @@ int main() {
 	int a, b, v;
 	cin >> a >> b >> v;
 
-	cout << (v - b) / (a - b);
+	cout << ((v - b) / (a - b)) + 1;
 }
