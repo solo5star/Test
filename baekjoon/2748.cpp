@@ -10,7 +10,7 @@
 
 using namespace std;
 
-int dp[91] = { 0, 1 };
+long long dp[91] = { 0, 1 };
 
 int main() {
 	ios_base::sync_with_stdio(false);
