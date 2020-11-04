@@ -45,6 +45,6 @@ int main() {
 		cin >> n;
 		result = fibonacci(n);
 
-		cout << result.first << " " << result.second;
+		cout << result.first << " " << result.second << "\n";
 	}
 }
