@@ -3,10 +3,7 @@
 #include <iostream>
 #include <utility>
 #include <algorithm>
-#include <math.h>
-#include <unordered_map>
 #include <string>
-#include <math.h>
 
 using namespace std;
 
@@ -18,7 +15,5 @@ int main() {
 	int a, b, v;
 	cin >> a >> b >> v;
 
-	int days = (v - b) / (a - b);
-
-	cout << days;
+	cout << (v - b) / (a - b);
 }
