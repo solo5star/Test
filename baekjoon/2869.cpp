@@ -13,8 +13,8 @@ int main() {
 	cin.tie(NULL);
 	cout.tie(NULL);
 
-	int a, b, v;
+	double a, b, v;
 	cin >> a >> b >> v;
 
-	cout << (a == v ? 1 : ((v - b) / (a - b)) + 1);
+	cout << (a > v ? 1 : (int)ceil((v - a) / (a - b)) + 1);
 }
