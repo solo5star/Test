@@ -18,7 +18,12 @@ int parent(int n) {
 }
 
 void merge(int a, int b) {
-	parents[b] = parent(a);
+	a = parent(a);
+	b = parent(b);
+
+	if (a == b) return;
+
+	parents[a] = b;
 }
 
 int main() {
