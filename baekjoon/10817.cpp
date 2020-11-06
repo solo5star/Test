@@ -9,26 +9,16 @@
 
 using namespace std;
 
+int nums[3];
+
 int main() {
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL);
 	cout.tie(NULL);
 
-	int a, b, c, tmp;
+	cin >> nums[0] >> nums[1] >> nums[2];
 
-	cin >> a >> b >> c;
+	sort(nums, nums + 3);
 
-	if (a < b) {
-		tmp = a;
-		a = b;
-		b = tmp;
-	}
-
-	if (b < c) {
-		tmp = c;
-		c = b;
-		b = tmp;
-	}
-
-	cout << b;
+	cout << nums[1];
 }
