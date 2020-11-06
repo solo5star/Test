@@ -9,7 +9,7 @@
 
 using namespace std;
 
-int parents[1000000];
+int parents[1000001];
 
 int parent(int n) {
 	if (parents[n] == n) return n;
