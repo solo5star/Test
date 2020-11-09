@@ -24,20 +24,24 @@ bool canThrough(int x, int y) {
 	if (x < 0 || y < 0 || x >= width || y >= height) {
 		return false;
 	}
+	if (visited[y][x]) return false;
+
 	return world[y][x];
 }
 
 void pushIfCanThrough(int x, int y) {
-	if (visited[y][x]) return;
-	visited[y][x] = true;
-
 	if (!canThrough(x, y)) return;
+
+	visited[y][x] = true;
 	
 	q.push(make_pair(x, y));
 }
 
 void bfs(int x, int y) {
-	if (x == width - 1 && y == height - 1) complete = true;
+	if (x == width - 1 && y == height - 1) {
+		complete = true;
+		return;
+	}
 
 	pushIfCanThrough(x - 1, y);
 	pushIfCanThrough(x + 1, y);
