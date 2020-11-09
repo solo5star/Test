@@ -7,12 +7,13 @@
 #include <math.h>
 #include <queue>
 #include <unordered_map>
+#include <set>
 
 using namespace std;
 
-int stu[100001];
-bool checked[100001];
-bool cyclics[100001];
+unordered_map<int, int> students;
+set<int> checked;
+set<int> cyclics;
 
 int cycles = 0;
 
@@ -27,22 +28,22 @@ void dfs(int n) {
 
 	while (true) {
 		// check cyclic !!!
-		if (!detectCyclic && checked[next]) {
+		if (!detectCyclic && checked.count(next)) {
 			detectCyclic = true;
 			cyclicN = next;
 			if (DEBUG) cout << " (Cyclic)";
 		}
 
-		checked[next] = true;
-		next = stu[next];
+		checked.insert(next);
+		next = students[next];
 
 		// if next is already cyclic (checked once), no more search
-		if (cyclics[next]) break;
+		if (cyclics.count(next)) break;
 
 		if (DEBUG) cout << " -> " << next;
 
 		if (detectCyclic) {
-			cyclics[next] = true;
+			cyclics.insert(next);
 			cycles++;
 
 			// end cycle!
@@ -60,29 +61,31 @@ int main() {
 	cin.tie(NULL);
 	cout.tie(NULL);
 
-	int t, n;
+	int t, n, s;
 	cin >> t;
 	for (int i = 0; i < t; i++) {
 		cycles = 0;
 
 		cin >> n;
 		for (int j = 1; j <= n; j++) {
-			cin >> stu[j];
-			checked[j] = false;
-			cyclics[j] = false;
+			cin >> s;
+			students[j] = s;
 		}
 
 		for (int j = 1; j <= n; j++) {
-			if (checked[j]) continue;
+			if (checked.count(j)) continue;
 
 			dfs(j);
 		}
 
 		cout << n - cycles << "\n";
 
-		for (int j = 1; j <= n; j++) {
-			if (cyclics[j]) {
-				if (DEBUG) cout << j << " ";
+		checked.clear();
+		cyclics.clear();
+
+		if (DEBUG) for (int j = 1; j <= n; j++) {
+			if (cyclics.count(j)) {
+				cout << j << " ";
 			}
 		}
 	}
