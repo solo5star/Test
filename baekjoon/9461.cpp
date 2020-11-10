@@ -22,6 +22,7 @@ int main() {
 
 		if (lens[n]) {
 			cout << lens[n] << "\n";
+			continue;
 		}
 		for (int j = 6; j <= n; j++) {
 			lens[j] = lens[j - 1] + lens[j - 5];
