@@ -7,7 +7,7 @@
 
 using namespace std;
 
-int lens[101] = { 0, 1, 1, 1, 2, 2, 3, 4, 5, 7, 9 };
+long long lens[101] = { 0, 1, 1, 1, 2, 2, 3, 4, 5, 7, 9 };
 
 int main() {
 	ios_base::sync_with_stdio(false);
@@ -20,11 +20,7 @@ int main() {
 	for (int i = 0; i < t; i++) {
 		cin >> n;
 
-		if (lens[n]) {
-			cout << lens[n] << "\n";
-			continue;
-		}
-		for (int j = 6; j <= n; j++) {
+		if(!lens[n]) for (int j = 6; j <= n; j++) {
 			lens[j] = lens[j - 1] + lens[j - 5];
 		}
 
