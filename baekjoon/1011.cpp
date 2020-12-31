@@ -7,7 +7,7 @@
 
 using namespace std;
 
-int sol(int diff) {
+long sol(long diff) {
 	int acc = 0;
 	while (diff > 3) {
 		acc += (diff % 2) + 2;
@@ -22,7 +22,8 @@ int main() {
 	cin.tie(NULL);
 	cout.tie(NULL);
 
-	int t, x, y, diff;
+	int t;
+	long x, y, diff;
 
 	cin >> t;
 
