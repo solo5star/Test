@@ -7,23 +7,13 @@
 
 using namespace std;
 
-long sol(long diff) {
-	int acc = 0;
-	while (diff > 3) {
-		acc += (diff % 2) + 2;
-		diff = (diff - 2) / 2;
-	}
-	acc += diff;
-	return acc;
-}
-
 int main() {
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL);
 	cout.tie(NULL);
 
 	int t;
-	long x, y, diff;
+	long x, y, diff, diff_sqrt;
 
 	cin >> t;
 
@@ -31,6 +21,21 @@ int main() {
 		cin >> x >> y;
 
 		diff = y - x;
-		cout << sol(diff) << "\n";
+		diff_sqrt = sqrt(diff);
+
+		if (diff < 4) {
+			cout << diff;
+		}
+		else if (diff == diff_sqrt * diff_sqrt) {
+			cout << 2 * diff_sqrt - 1;
+		}
+		else if (diff <= diff_sqrt * diff_sqrt + diff_sqrt) {
+			cout << 2 * diff_sqrt;
+		}
+		else {
+			cout << 2 * diff_sqrt + 1;
+		}
+
+		cout << "\n";
 	}
 }
