@@ -13,12 +13,12 @@ int usersCount = 0;
 int sumOfDistances[101];
 
 void floydWarshall() {
-	for (int from = 1; from <= usersCount; from++) {
-		for (int to = 1; to <= usersCount; to++) {
-			if (from == to) continue;
+	for (int mid = 1; mid <= usersCount; mid++) {
+		for (int from = 1; from <= usersCount; from++) {
+			for (int to = 1; to <= usersCount; to++) {
+				if (from == to) continue;
 
-			// search relations (via mid)
-			for (int mid = 1; mid <= usersCount; mid++) {
+				// search relations (via mid)
 				if (distances[from][mid] && distances[mid][to]) {
 					if (distances[from][to] == 0) {
 						distances[from][to] = distances[from][mid] + distances[mid][to];
