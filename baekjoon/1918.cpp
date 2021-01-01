@@ -12,19 +12,20 @@ stack<char> operators;
 
 int priority[255];
 
+void pop() {
+	if(operators.top() != '(') cout << operators.top();
+	operators.pop();
+}
+
 int main() {
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL);
 	cout.tie(NULL);
 
-	priority['('] = 10;
-
-	priority['+'] = 3;
-	priority['-'] = 3;
-	priority['*'] = 4;
-	priority['/'] = 4;
-
-	priority[')'] = 1;
+	priority['*'] = 2;
+	priority['/'] = 2;
+	priority['+'] = 1;
+	priority['-'] = 1;
 
 	string input;
 	cin >> input;
@@ -35,25 +36,19 @@ int main() {
 		if ('A' <= ch && ch <= 'Z') {
 			cout << ch;
 		}
+		else if (ch == '(') {
+			operators.push(ch);
+		}
+		else if (ch == ')') {
+			while (operators.top() != '(') pop();
+			pop();
+		}
 		else {
-			while (!operators.empty()) {
-				char next = operators.top();
+			while (!operators.empty() && operators.top() != '(' && priority[ch] <= priority[operators.top()]) pop();
 
-				if (priority[ch] > priority[next]) break;
-
-				if (next == '(' && ch != ')') break;
-
-				if(next != '(' && next != ')') cout << next;
-
-				operators.pop();
-			}
 			operators.push(ch);
 		}
 	}
 
-	while (!operators.empty()) {
-		char next = operators.top();
-		if (next != '(' && next != ')') cout << next;
-		operators.pop();
-	}
+	while (!operators.empty()) pop();
 }
