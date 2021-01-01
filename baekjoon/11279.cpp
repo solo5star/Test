@@ -8,7 +8,7 @@
 
 using namespace std;
 
-int heap[100000];
+int heap[100001];
 int index = 0;
 
 void swap(int* a, int* b) {
@@ -59,7 +59,7 @@ int pop_heap() {
 		if (!(child < index)) break;
 
 		int child2 = (current * 2) + 2;
-		if (child2 < index && heap[child] > heap[child2]) child = child2;
+		if (child2 < index && cmp(heap[child], heap[child2])) child = child2;
 
 		if (cmp(heap[child], heap[current])) break;
 
