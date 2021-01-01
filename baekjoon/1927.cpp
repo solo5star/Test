@@ -17,20 +17,31 @@ void swap(int* a, int* b) {
 	*b = temp;
 }
 
+// a > b : Min heap
+// a < b : Max heap
+bool cmp(int a, int b) {
+	return a > b;
+}
+
+void print_heap() {
+	cout << "[ ";
+	for (int i = 0; i < index; i++) {
+		cout << heap[i] << " ";
+	}
+	cout << "]\n";
+}
+
 void push_heap(int n) {
 	heap[index] = n;
 
 	int current = index;
 	while (current > 0) {
-		int parent = (index+1) / 2 - 1;
+		int parent = (current+1) / 2 - 1;
 
-		if (heap[parent] > heap[current]) {
-			swap(&heap[parent], &heap[current]);
-			current = parent;
-		}
-		else {
-			break;
-		}
+		if (!cmp(heap[parent], heap[current])) break;
+
+		swap(&heap[parent], &heap[current]);
+		current = parent;
 	}
 
 	index++;
@@ -50,21 +61,13 @@ int pop_heap() {
 		int child2 = (current * 2) + 2;
 		if (child2 < index && heap[child] > heap[child2]) child = child2;
 
-		if (heap[current] < heap[child]) break;
+		if (cmp(heap[child], heap[current])) break;
 
 		swap(&heap[current], &heap[child]);
 		current = child;
 	}
 
 	return popped;
-}
-
-void print_heap() {
-	cout << "[ ";
-	for (int i = 0; i < index; i++) {
-		cout << heap[i] << " ";
-	}
-	cout << "]\n";
 }
 
 int main() {
