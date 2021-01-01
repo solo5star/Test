@@ -9,17 +9,17 @@
 
 using namespace std;
 
-typedef int island_id;
-typedef int sea_id;
+typedef int island_id_t;
+typedef int sea_id_t;
 
-const island_id ISLAND_UNKNOWN = -1;
+const island_id_t ISLAND_UNKNOWN = -1;
 
-const sea_id SEA_UNKNOWN = -1;
-const sea_id SEA_GLOBAL = -2;
+const sea_id_t SEA_UNKNOWN = -1;
+const sea_id_t SEA_GLOBAL = -2;
 
 typedef struct {
-	island_id island_id;
-	sea_id sea_id;
+	island_id_t island_id;
+	sea_id_t sea_id;
 	bool visited;
 } tile;
 
@@ -33,11 +33,11 @@ struct {
 } world;
 
 typedef struct {
-	island_id parent;
+	island_id_t parent;
 	bool visited;
 	int height;
 
-	unordered_set<island_id> children;
+	unordered_set<island_id_t> children;
 } island;
 
 unordered_map<int, island> islands;
@@ -177,7 +177,7 @@ int getHeight(island& island) {
 	if (island.children.empty()) return island.height = 0;
 
 	int maxh = 0;
-	for (island_id child_id : island.children) {
+	for (island_id_t child_id : island.children) {
 		maxh = max(maxh, getHeight(islands[child_id]));
 	}
 
