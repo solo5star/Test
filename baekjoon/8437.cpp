@@ -12,9 +12,9 @@ int main() {
 	cin.tie(NULL);
 	cout.tie(NULL);
 
-	int a, b;
+	unsigned long long a, b;
 	cin >> a >> b;
 
-	cout << ((a - b) / 2) + b << "\n";
+	cout << ((a + b) / 2) << "\n";
 	cout << ((a - b) / 2);
 }
