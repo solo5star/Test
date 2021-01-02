@@ -3,35 +3,61 @@
 #include <iostream>
 #include <utility>
 #include <algorithm>
-#include <string>
 #include <math.h>
-#include <queue>
-#include <unordered_map>
-#include <set>
 
 using namespace std;
 
-int from, to;
+typedef unsigned long long uint_64;
 
-bool baseNumbers[1000001];
-bool che[1000001];
-int cheCount;
+uint_64 offset = 0;
+uint_64 from = 0;
+uint_64 to = 0;
+uint_64 length = 0;
 
-bool inChe(int n) {
-	if (!(from <= n && n <= to)) return false;
+int counter = 0;
+bool visited[1000001];
+bool numbers[1000001];
 
-	return che[n - from];
+uint_64 nearest(uint_64 n) {
+	return (offset / n + (offset % n != 0)) * n;
 }
 
-void addChe(int n) {
-	if (!(from <= n && n <= to)) return;
+int addr(uint_64 n) {
+	return n - offset;
+}
 
-	if (che[n - from]) return;
+void che(uint_64 n) {
+	if (visited[n]) return;
 
-	che[n - from] = true;
-	cheCount--;
+	visited[n] = true;
 
-	// cout << n << "\n";
+	uint_64 squared = n * n;
+	uint_64 base = nearest(squared);
+	int multiplier = 0;
+
+	uint_64 current;
+
+#ifdef DEBUG
+	cout << "che(" << n << "): base=" << base << ", squared=" << squared << "\n";
+#endif
+
+	while (true) {
+		current = base + squared * multiplier;
+
+		if (!(current <= to)) break;
+
+		visited[n * multiplier] = true;
+
+		if (!numbers[addr(current)]) {
+#ifdef DEBUG
+			cout << current << " is ㅇㅇ" << "\n";
+#endif
+			numbers[addr(current)] = true;
+			counter--;
+		}
+
+		multiplier++;
+	}
 }
 
 int main() {
@@ -40,24 +66,21 @@ int main() {
 	cout.tie(NULL);
 
 	cin >> from >> to;
-	cheCount = to - from + 1;
+	offset = from;
+	length = to - from + 1;
+	counter = length;
 
-	int maxN = (int)sqrt(to) + 1;
+	uint_64 squaredRoot = sqrt(to);
 
-	for (int i = 2; i < maxN; i++) {
-		int squared = i * i;
-		int startN = max(1, from / squared) * squared;
-
-		if (inChe(startN)) continue;
-
-		for (int j = 0; ; j++) {
-			int squaredX = startN + squared * j;
-
-			if (squaredX > to) break;
-
-			addChe(squaredX);
-		}
+	for (uint_64 n = 2; n <= squaredRoot; n++) {
+		che(n);
 	}
 
-	cout << cheCount;
+#ifdef DEBUG
+	for (int i = 0; i < length; i++) {
+		cout << (i + offset) << ":" << (numbers[i] ? "ㅇㅇ" : "ㄴㄴ") << "\n";
+	}
+#endif
+
+	cout << counter;
 }
