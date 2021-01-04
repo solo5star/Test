@@ -14,15 +14,17 @@ uint_64 base;
 int n;
 uint_64 modBy;
 uint_64 memo[100000];
+int memoIndex = 1;
 
 // n is exponent of 2 (2^n)
 uint_64 power(int n) {
-	if (n == 0) return base;
-	if (memo[n] != 0) return memo[n];
+	while (memoIndex <= n) {
+		memo[memoIndex] = (memo[memoIndex - 1] * memo[memoIndex - 1]) % modBy;
 
-	uint_64 powered = power(n - 1);
+		memoIndex++;
+	}
 
-	return memo[n] = (powered * powered) % modBy;
+	return memo[n];
 }
 
 int main() {
@@ -31,6 +33,8 @@ int main() {
 	cout.tie(NULL);
 	
 	cin >> base >> n >> modBy;
+
+	memo[0] = base % modBy;
 
 	int expOf2 = 0;
 	uint_64 acc = 1;
