@@ -15,7 +15,6 @@ int main() {
 	cin.tie(NULL);
 	cout.tie(NULL);
 
-	uint_64 limit = 1000000000;
 	uint_64 a, b;
 	int count = 0;
 	cin >> a >> b;
@@ -26,6 +25,9 @@ int main() {
 		}
 		else if (b % 2 == 0) {
 			b /= 2;
+		}
+		else {
+			break;
 		}
 		count++;
 	}
