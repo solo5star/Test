@@ -16,10 +16,11 @@ int main() {
 	cin.tie(NULL);
 	cout.tie(NULL);
 
-	int t, n, maximum = 0;
+	int t, n;
 	cin >> t;
 
 	while (t--) {
+		int maximum = 0;
 		cin >> n;
 
 		for (int y = 0; y < 2; y++) {
