@@ -3,57 +3,52 @@
 #include <iostream>
 #include <utility>
 #include <algorithm>
-#include <string>
+#include <string.h>
 #include <math.h>
-#include <queue>
-#include <unordered_map>
-#include <set>
 
 using namespace std;
 
-unordered_map<int, int> students;
-set<int> checked;
-set<int> cyclics;
 
-int cycles = 0;
+// fill 0 if student is successfully grouped
+int students[100001];
+int successfullyGrouped = 0;
 
-bool DEBUG = false;
+bool visited[100001];
 
-void dfs(int n) {
-	int next = n;
-	int cyclicN;
-	bool detectCyclic = false;
+// Return given students are successfully grouped
+bool dfs(int startStudent, int student = -1) {
+	if (student == -1) student = startStudent;
 
-	if(DEBUG) cout << "DFS: " << n;
+	bool grouped = false;
 
-	while (true) {
-		// check cyclic !!!
-		if (!detectCyclic && checked.count(next)) {
-			detectCyclic = true;
-			cyclicN = next;
-			if (DEBUG) cout << " (Cyclic)";
+	// Already grouped
+	if (students[student] == 0) {
+		grouped = false;
+	}
+	else if (visited[student]) {
+		// Cyclic. Sr == S1
+		if (student == startStudent) {
+			grouped = true;
 		}
-
-		checked.insert(next);
-		next = students[next];
-
-		// if next is already cyclic (checked once), no more search
-		if (cyclics.count(next)) break;
-
-		if (DEBUG) cout << " -> " << next;
-
-		if (detectCyclic) {
-			cyclics.insert(next);
-			cycles++;
-
-			// end cycle!
-			if (next == cyclicN) {
-				if (DEBUG) cout << " -> " << next << " END\n";
-				break;
-			}
+		// Cyclic but not Sr == S1
+		else {
+			grouped = false;
 		}
 	}
-	if (DEBUG) cout << "\n";
+	else {
+		visited[student] = true;
+
+		grouped = dfs(startStudent, students[student]);
+
+		if (grouped) {
+			students[student] = 0;
+			successfullyGrouped++;
+		}
+
+		visited[student] = false;
+	}
+
+	return grouped;
 }
 
 int main() {
@@ -61,32 +56,21 @@ int main() {
 	cin.tie(NULL);
 	cout.tie(NULL);
 
-	int t, n, s;
+	int t, n;
 	cin >> t;
-	for (int i = 0; i < t; i++) {
-		cycles = 0;
+
+	while (t--) {
+		successfullyGrouped = 0;
 
 		cin >> n;
-		for (int j = 1; j <= n; j++) {
-			cin >> s;
-			students[j] = s;
+		for (int i = 1; i <= n; i++) {
+			cin >> students[i];
 		}
 
-		for (int j = 1; j <= n; j++) {
-			if (checked.count(j)) continue;
-
-			dfs(j);
+		for (int i = 1; i <= n; i++) {
+			dfs(i);
 		}
 
-		cout << n - cycles << "\n";
-
-		checked.clear();
-		cyclics.clear();
-
-		if (DEBUG) for (int j = 1; j <= n; j++) {
-			if (cyclics.count(j)) {
-				cout << j << " ";
-			}
-		}
+		cout << (n - successfullyGrouped) << "\n";
 	}
 }
