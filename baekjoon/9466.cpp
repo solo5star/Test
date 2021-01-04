@@ -8,47 +8,39 @@
 
 using namespace std;
 
-
-// fill 0 if student is successfully grouped
+// fill 0 if cyclic check is finished
 int students[100001];
 int successfullyGrouped = 0;
 
 bool visited[100001];
 
-// Return given students are successfully grouped
-bool dfs(int startStudent, int student = -1) {
-	if (student == -1) student = startStudent;
-
-	bool grouped = false;
-
+// Return student > 0 if cyclic is detected.
+// Return 0 if out of cycle.
+int dfs(int student) {
 	// Already grouped
 	if (students[student] == 0) {
-		grouped = false;
+		return 0;
 	}
+	// Cycle detected
 	else if (visited[student]) {
-		// Cyclic. Sr == S1
-		if (student == startStudent) {
-			grouped = true;
-		}
-		// Cyclic but not Sr == S1
-		else {
-			grouped = false;
-		}
+		return student;
 	}
 	else {
 		visited[student] = true;
 
-		grouped = dfs(startStudent, students[student]);
+		int detectedCycle = dfs(students[student]);
 
-		if (grouped) {
-			students[student] = 0;
+		if (detectedCycle > 0) {
 			successfullyGrouped++;
 		}
 
+		students[student] = 0;
 		visited[student] = false;
-	}
 
-	return grouped;
+		if (detectedCycle == student) return 0;
+
+		return detectedCycle;
+	}
 }
 
 int main() {
