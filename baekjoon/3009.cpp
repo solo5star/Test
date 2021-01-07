@@ -13,21 +13,15 @@ int main() {
 	cin.tie(NULL);
 	cout.tie(NULL);
 
-	int x_coords[3];
-	int y_coords[3];
+	int x = 0, y = 0, temp;
 
-	cin >> x_coords[0];
-	cin >> y_coords[0];
-	cin >> x_coords[1];
-	cin >> y_coords[1];
-	cin >> x_coords[2];
-	cin >> y_coords[2];
+	for (int i = 0; i < 3; i++) {
+		cin >> temp;
+		x ^= temp;
 
-	if (x_coords[2] == x_coords[0]) cout << x_coords[1];
-	else if (x_coords[2] == x_coords[1]) cout << x_coords[0];
+		cin >> temp;
+		y ^= temp;
+	}
 
-	cout << " ";
-
-	if (y_coords[2] == y_coords[0]) cout << y_coords[1];
-	else if (y_coords[2] == y_coords[1]) cout << y_coords[0];
+	cout << x << " " << y;
 }
