@@ -30,7 +30,7 @@ int main() {
 
 	int acc = 0;
 	int minPrime = 0;
-	for (int i = m; i <= n; i++) {
+	for (int i = max(2, m); i <= n; i++) {
 		if (numbers[i] == true) continue;
 
 		acc += i;
