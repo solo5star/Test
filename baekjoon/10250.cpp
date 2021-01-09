@@ -3,27 +3,25 @@
 #include <iostream>
 #include <utility>
 #include <algorithm>
-#include <queue>
+#include <string>
+#include <math.h>
 
 using namespace std;
 
-queue<int> q;
+typedef unsigned long long uint_64;
 
 int main() {
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL);
 	cout.tie(NULL);
 
-	int count;
-	cin >> count;
-
-	int h, w, n;
-	for (int i = 0; i < count; i++) {
+	int t, h, w, n;
+	cin >> t;
+	while (t--) {
 		cin >> h >> w >> n;
 
-		cout << ((n - 1) % h) + 1;
-		w = ((n - 1) / h) + 1;
-		if (w < 10) cout << "0";
-		cout << w << "\n";
+		int result = (n % h == 0 ? h : n % h) * 100 + (n / h + 1);
+
+		cout << result << "\n";
 	}
 }
