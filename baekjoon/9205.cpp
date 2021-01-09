@@ -35,12 +35,8 @@ bool bfs() {
 		int nodeId = q.front();
 		q.pop();
 
-		visited[nodeId] = true;
-
 		for (int i = 1; i <= nodesCount; i++) {
-			if (visited[i] == true) continue;
-
-			if (distances[nodeId][i] <= 1000) {
+			if (visited[i] == false && distances[nodeId][i] <= 1000) {
 				if (i == NODE_END) {
 					success = true;
 
@@ -51,6 +47,7 @@ bool bfs() {
 				}
 				else {
 					q.push(i);
+					visited[i] = true;
 				}
 			}
 		}
