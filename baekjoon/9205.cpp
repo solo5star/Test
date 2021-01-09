@@ -18,9 +18,9 @@ const int NODE_START = 1;
 const int NODE_END = 2;
 
 int nodesCount = 0;
-point nodes[102];
-int distances[102][102];
-bool visited[102];
+point nodes[103];
+int distances[103][103];
+bool visited[103];
 
 queue<int> q;
 
