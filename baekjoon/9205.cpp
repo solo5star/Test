@@ -89,7 +89,7 @@ int main() {
 
 		// INITIALIZE DISTANCES
 		for (int i = 1; i <= nodesCount; i++) {
-			for (int j = 1; j <= nodesCount; i++) {
+			for (int j = 1; j <= nodesCount; j++) {
 				distances[i][j] = 0;
 			}
 		}
