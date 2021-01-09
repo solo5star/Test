@@ -43,7 +43,6 @@ bool bfs() {
 
 			if (distances[nodeId][i] <= 1000) {
 				if (i == NODE_END) {
-					while (!q.empty()) q.pop();
 					success = true;
 					break;
 				}
@@ -53,6 +52,14 @@ bool bfs() {
 			}
 		}
 	}
+
+	// CLEAR VISITED
+	for (int i = 1; i <= nodesCount; i++) {
+		visited[i] = false;
+	}
+
+	// CLEAR QUEUE
+	while (!q.empty()) q.pop();
 
 	return success;
 }
@@ -67,18 +74,23 @@ int main() {
 
 	while (t--) {
 		cin >> n;
-
 		nodesCount = n + 2;
 
+		// INPUT: START
 		cin >> x >> y;
 		nodes[NODE_START] = { x, y };
+
+		// INPUT: CONVINIENT
 		for (int i = 3; i <= nodesCount; i++) {
 			cin >> x >> y;
 			nodes[i] = { x, y };
 		}
+
+		// INPUT: END
 		cin >> x >> y;
 		nodes[NODE_END] = { x, y };
 
+		// CALCULATE DISTANCE
 		for (int via = 1; via <= nodesCount; via++) {
 			for (int from = 1; from <= nodesCount; from++) {
 				for (int to = 1; to <= nodesCount; to++) {
@@ -92,6 +104,7 @@ int main() {
 			}
 		}
 
+		// BFS
 		q.push(NODE_START);
 		cout << (bfs() ? "happy" : "sad") << "\n";
 	}
