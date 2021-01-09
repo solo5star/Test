@@ -24,25 +24,13 @@ int main() {
 	}
 
 	cout << "<";
-	bool printComma = false;
-
-	int a = 0;
 	while (!q.empty()) {
-		a++;
-		if (a == k) {
-			a = 0;
-
-			if (printComma) cout << ", ";
-			printComma = true;
-
-			cout << q.front();
-			q.pop();
-		}
-		else {
+		for (int i = 0; i < k - 1; i++) {
 			q.push(q.front());
 			q.pop();
 		}
+		n--;
+		cout << q.front() << (n == 0 ? ">" : ", ");
+		q.pop();
 	}
-
-	cout << ">";
 }
