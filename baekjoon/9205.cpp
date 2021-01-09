@@ -11,14 +11,13 @@ using namespace std;
 
 typedef struct { int x; int y; } point;
 
-int nodesCount = 0;
-
+// 1 = START
+// 2 = END
+// 3~ = CONVINIENT
 const int NODE_START = 1;
 const int NODE_END = 2;
 
-// 1 = START
-// 2 = END
-// 3~n = CONVINIENT
+int nodesCount = 0;
 point nodes[102];
 int distances[102][102];
 bool visited[102];
@@ -39,11 +38,15 @@ bool bfs() {
 		visited[nodeId] = true;
 
 		for (int i = 1; i <= nodesCount; i++) {
-			if (visited[i]) continue;
+			if (visited[i] == true) continue;
 
 			if (distances[nodeId][i] <= 1000) {
 				if (i == NODE_END) {
 					success = true;
+
+					// CLEAR QUEUE
+					while (!q.empty()) q.pop();
+
 					break;
 				}
 				else {
@@ -57,9 +60,6 @@ bool bfs() {
 	for (int i = 1; i <= nodesCount; i++) {
 		visited[i] = false;
 	}
-
-	// CLEAR QUEUE
-	while (!q.empty()) q.pop();
 
 	return success;
 }
@@ -90,7 +90,14 @@ int main() {
 		cin >> x >> y;
 		nodes[NODE_END] = { x, y };
 
-		// CALCULATE DISTANCE
+		// INITIALIZE DISTANCES
+		for (int i = 1; i <= nodesCount; i++) {
+			for (int j = 1; j <= nodesCount; i++) {
+				distances[i][j] = 0;
+			}
+		}
+
+		// CALCULATE DISTANCES
 		for (int via = 1; via <= nodesCount; via++) {
 			for (int from = 1; from <= nodesCount; from++) {
 				for (int to = 1; to <= nodesCount; to++) {
