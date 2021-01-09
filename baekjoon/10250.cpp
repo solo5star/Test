@@ -20,7 +20,7 @@ int main() {
 	while (t--) {
 		cin >> h >> w >> n;
 
-		int result = (n % h == 0 ? h : n % h) * 100 + (n / h + 1);
+		int result = ((n - 1) % h + 1) * 100 + ((n - 1) / h + 1);
 
 		cout << result << "\n";
 	}
