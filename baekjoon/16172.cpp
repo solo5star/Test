@@ -34,14 +34,14 @@ int main() {
 	cin >> text;
 	cin >> pattern;
 
+	calculatePi();
+
 	int len = text.length();
 	int j = 0;
 	bool found = false;
+
 	for (int i = 0; i < len; i++) {
-		while ('0' <= text[i] && text[i] <= '9') {
-			i++;
-			if (i >= len) break;
-		}
+		if ('0' <= text[i] && text[i] <= '9') continue;
 
 		while (j > 0 && text[i] != pattern[j]) {
 			j = pi[j - 1];
