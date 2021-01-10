@@ -38,6 +38,14 @@ int main() {
 
 		int patternLength = len - pi[len - 1];
 
-		cout << (len % patternLength ? 1 : len / patternLength) << "\n";
+		bool validated = true;
+		for (int i = 0; i < len; i++) {
+			if (text[i % patternLength] != text[i]) {
+				validated = false;
+				break;
+			}
+		}
+
+		cout << (validated ? len / patternLength : 1) << "\n";
 	}
 }
