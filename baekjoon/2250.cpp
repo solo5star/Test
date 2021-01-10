@@ -15,7 +15,7 @@ typedef struct {
 	int parent;
 	int left;
 	int right;
-	int x, y;
+	int x;
 } node;
 
 node nodes[10001];
@@ -31,7 +31,6 @@ void walk(int id, int level = 1) {
 	int x = x_acc++;
 
 	nodes[id].x = x;
-	nodes[id].y = level;
 
 	// UPDATE LEVEL's MIN/MAX
 	if (levels[level].min == 0 || x < levels[level].min) levels[level].min = x;
@@ -57,7 +56,7 @@ void walk(int id, int level = 1) {
 }
 
 int getRoot() {
-	node& current = nodes[1];
+	node current = nodes[1];
 
 	while (current.parent) {
 		current = nodes[current.parent];
