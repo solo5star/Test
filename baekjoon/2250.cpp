@@ -33,12 +33,12 @@ void walk(int id = 1, int level = 1) {
 	nodes[id].y = level;
 
 	// UPDATE LEVEL's MIN/MAX
-	if (x < levels[level].min) levels[level].min = x;
-	if (levels[level].max < x) levels[level].max = x;
+	if (levels[level].min == 0 || x < levels[level].min) levels[level].min = x;
+	if (levels[level].max == 0 || levels[level].max < x) levels[level].max = x;
 
 	// UPDATE LEVEL's WIDTH
 	if (levels[level].min && levels[level].max) {
-		levels[level].width = levels[level].max - levels[level].min;
+		levels[level].width = levels[level].max - levels[level].min + 1;
 	}
 	else {
 		levels[level].width = 1;
