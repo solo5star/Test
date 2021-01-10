@@ -12,6 +12,7 @@ using namespace std;
 
 typedef struct {
 	int id;
+	int parent;
 	int left;
 	int right;
 	int x, y;
@@ -24,7 +25,7 @@ struct { int min; int max; int width; } levels[10001];
 
 int x_acc = 1;
 
-void walk(int id = 1, int level = 1) {
+void walk(int id, int level = 1) {
 	if (nodes[id].left) walk(nodes[id].left, level + 1);
 
 	int x = x_acc++;
@@ -55,6 +56,16 @@ void walk(int id = 1, int level = 1) {
 	if (nodes[id].right) walk(nodes[id].right, level + 1);
 }
 
+int getRoot() {
+	node& current = nodes[1];
+
+	while (current.parent) {
+		current = nodes[current.parent];
+	}
+
+	return current.id;
+}
+
 int main() {
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL);
@@ -66,11 +77,19 @@ int main() {
 	for (int i = 0; i < n; i++) {
 		cin >> id >> left >> right;
 
-		nodes[id].left = left == -1 ? 0 : left;
-		nodes[id].right = right == -1 ? 0 : right;
+		nodes[id].id = id;
+
+		if (left != -1) {
+			nodes[id].left = left;
+			nodes[left].parent = id;
+		}
+		if (right != -1) {
+			nodes[id].right = right;
+			nodes[right].parent = id;
+		}
 	}
 
-	walk();
+	walk(getRoot());
 
 	cout << maxLevel << " " << levels[maxLevel].width;
 }
