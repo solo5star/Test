@@ -23,6 +23,8 @@ int main() {
 
 		int len = text.length();
 
+		memset(pi, 0, len);
+
 		int j = 0;
 		for (int i = 1; i < len; i++) {
 			while (j > 0 && text[j] != text[i]) {
