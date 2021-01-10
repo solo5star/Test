@@ -38,8 +38,8 @@ int main() {
 
 		int patternLength = len - pi[len - 1];
 
-		bool validated = true;
-		for (int i = 0; i < len; i++) {
+		bool validated = len % patternLength == 0;
+		if(validated) for (int i = 0; i < len; i++) {
 			if (text[i % patternLength] != text[i]) {
 				validated = false;
 				break;
