@@ -35,6 +35,6 @@ int main() {
 
 		int patternLength = len - pi[len - 1];
 
-		cout << (len % patternLength ? len : len / patternLength) << "\n";
+		cout << (len % patternLength ? 1 : len / patternLength) << "\n";
 	}
 }
