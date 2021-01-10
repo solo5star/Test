@@ -17,16 +17,6 @@ int result = 0;
 
 point points[25];
 
-inline bool isAdjacent(point& p) {
-	int x = p.x;
-	int y = p.y;
-
-	return (x > 0 && map[y][x - 1].visited)
-		|| (x < 4 && map[y][x + 1].visited)
-		|| (y > 0 && map[y - 1][x].visited)
-		|| (y < 4 && map[y + 1][x].visited);
-}
-
 bool validate() {
 	queue<point> q;
 
@@ -41,8 +31,7 @@ bool validate() {
 	}
 
 	int count = 0;
-	bool checked[5][5];
-	memset(checked, false, sizeof(checked));
+	bool checked[5][5] = {0,};
 
 	while (!q.empty()) {
 		point p = q.front();
