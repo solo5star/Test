@@ -11,7 +11,7 @@
 
 using namespace std;
 
-const int INF = 9999;
+const int INF = ~(1 << 31);
 
 typedef struct {
 	int id;
