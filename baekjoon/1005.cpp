@@ -52,12 +52,16 @@ int main() {
 	cin.tie(nullptr);
 	cout.tie(nullptr);
 
-	int t, cost, from, to, destination;
+	int t, from, to, destination;
 	cin >> t;
 	while (t--) {
 		cin >> nodesCount >> edgesCount;
 
 		for (int i = 1; i <= nodesCount; i++) {
+			nodes[i].children.clear();
+			nodes[i].requiredCost = 0;
+			nodes[i].inDegree = 0;
+
 			cin >> nodes[i].cost;
 		}
 
