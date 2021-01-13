@@ -7,7 +7,7 @@
 #include <vector>
 #include <math.h>
 #include <queue>
-#include <limits>
+#include <limits.h>
 
 using namespace std;
 
