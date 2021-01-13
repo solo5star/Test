@@ -24,36 +24,23 @@ typedef struct {
 bool visited[100001];
 node nodes[100001];
 
-int maximum = 0;
+int maximumDepth = 0;
+int maximumNode = 0;
 
-int dfs(node& n, int depth = 0) {
+void dfs(node& n, int depth = 0) {
+	if (visited[n.id]) return;
 	visited[n.id] = true;
 
-	if (n.edges.empty()) {
-		return 0;
+	if (depth > maximumDepth) {
+		maximumDepth = depth;
+		maximumNode = n.id;
 	}
 
-	int maximumOfChild = 0;
-	int m1 = 0;
-	int m2 = 0;
-	int distance;
+	if (n.edges.empty()) return;
 
 	for (edge& e : n.edges) {
-		if (visited[e.to]) continue;
-
-		distance = dfs(nodes[e.to], depth + e.distance) + e.distance;
-
-		maximumOfChild = max(maximumOfChild, distance);
-
-		if (distance >= m1) {
-			m2 = m1;
-			m1 = distance;
-		}
+		dfs(nodes[e.to], depth + e.distance);
 	}
-
-	maximum = max(maximum, m1 + max(m2, depth));
-
-	return maximumOfChild;
 }
 
 int main() {
@@ -82,5 +69,11 @@ int main() {
 
 	dfs(nodes[1]);
 
-	cout << maximum;
+	for (int i = 0; i < n; i++) {
+		visited[i] = false;
+	}
+
+	dfs(nodes[maximumNode]);
+
+	cout << maximumDepth;
 }
