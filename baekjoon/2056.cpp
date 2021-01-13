@@ -7,39 +7,27 @@
 #include <vector>
 #include <math.h>
 #include <queue>
-#include <sstream>
 
 using namespace std;
 
 int costs[10001];
-
 
 int main() {
 	ios_base::sync_with_stdio(false);
 	cin.tie(nullptr);
 	cout.tie(nullptr);
 
-	string line;
-
-	int n, node, cost;
+	int n, k, node, cost;
 	cin >> n;
 
-	// clear buffer
-	getline(cin, line);
-
 	for (int i = 1; i <= n; i++) {
-		getline(cin, line);
-
-		istringstream iss(line);
-
-		iss >> cost;
-
 		int requiredCost = 0;
 
-		while (!iss.eof()) {
-			iss >> node;
+		cin >> cost;
+		cin >> k;
 
-			if (node == 0) continue;
+		while (k--) {
+			cin >> node;
 
 			requiredCost = max(requiredCost, costs[node]);
 		}
