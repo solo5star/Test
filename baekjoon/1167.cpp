@@ -26,29 +26,34 @@ node nodes[100001];
 
 int maximum = 0;
 
-int dfs(node& n) {
+int dfs(node& n, int depth = 0) {
 	visited[n.id] = true;
 
 	if (n.edges.empty()) {
 		return 0;
 	}
 
+	int maximumOfChild = 0;
 	int m1 = 0;
 	int m2 = 0;
 	int distance;
+
 	for (edge& e : n.edges) {
 		if (visited[e.to]) continue;
 
-		distance = dfs(nodes[e.to]) + e.distance;
+		distance = dfs(nodes[e.to], depth + e.distance) + e.distance;
+
+		maximumOfChild = max(maximumOfChild, distance);
+
 		if (distance >= m1) {
 			m2 = m1;
 			m1 = distance;
-
-			maximum = max(maximum, m1 + m2);
 		}
 	}
 
-	return m1;
+	maximum = max(maximum, m1 + max(m2, depth));
+
+	return maximumOfChild;
 }
 
 int main() {
