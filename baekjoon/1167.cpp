@@ -24,21 +24,31 @@ typedef struct {
 bool visited[100001];
 node nodes[100001];
 
-int getDiameter(node& n) {
+int maximum = 0;
+
+int dfs(node& n) {
 	visited[n.id] = true;
 
 	if (n.edges.empty()) {
 		return 0;
 	}
 
-	int maximum = 0;
+	int m1 = 0;
+	int m2 = 0;
+	int distance;
 	for (edge& e : n.edges) {
 		if (visited[e.to]) continue;
 
-		maximum = max(maximum, getDiameter(nodes[e.to]) + e.distance);
+		distance = dfs(nodes[e.to]) + e.distance;
+		if (distance >= m1) {
+			m2 = m1;
+			m1 = distance;
+
+			maximum = max(maximum, m1 + m2);
+		}
 	}
 
-	return maximum;
+	return m1;
 }
 
 int main() {
@@ -65,5 +75,7 @@ int main() {
 		}
 	}
 
-	cout << getDiameter(nodes[1]);
+	dfs(nodes[1]);
+
+	cout << maximum;
 }
