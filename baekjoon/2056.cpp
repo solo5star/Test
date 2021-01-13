@@ -17,7 +17,7 @@ int main() {
 	cin.tie(nullptr);
 	cout.tie(nullptr);
 
-	int n, k, node, cost;
+	int n, k, node, cost, maximumCost = 0;
 	cin >> n;
 
 	for (int i = 1; i <= n; i++) {
@@ -33,7 +33,9 @@ int main() {
 		}
 
 		costs[i] = cost + requiredCost;
+
+		maximumCost = max(maximumCost, costs[i]);
 	}
 
-	cout << costs[n];
+	cout << maximumCost;
 }
