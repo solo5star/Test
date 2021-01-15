@@ -8,7 +8,6 @@
 #include <math.h>
 #include <stack>
 #include <sstream>
-#include <regex>
 
 using namespace std;
 
@@ -16,7 +15,9 @@ bool empty(stringstream& ss) {
 	return ss.rdbuf()->in_avail() == 0;
 }
 
-bool validate(string& str) {
+string str;
+
+bool validate() {
 	int n = str.length();
 
 	// <~~~~>
@@ -142,17 +143,12 @@ bool validate(string& str) {
 	return context.empty();
 }
 
-
 int main() {
 	ios_base::sync_with_stdio(false);
 	cin.tie(nullptr);
 	cout.tie(nullptr);
 
-	string line;
-
-	while (!cin.eof()) {
-		getline(cin, line);
-
-		cout << (validate(line) ? "valid" : "invalid") << "\n";
+	while (getline(cin, str)) {
+		cout << (validate() ? "valid" : "invalid") << "\n";
 	}
 }
