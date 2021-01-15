@@ -33,16 +33,13 @@ int main() {
 			wordCounter = 0;
 		}
 		else {
-			if (wordCounter + word.length() > 80) {
+			if (wordCounter + (wordCounter != 0) + word.length() > 80) {
 				cout << "\n";
 				wordCounter = 0;
 			}
-			else {
-				cout << (wordCounter ? " " : "");
-			}
 
-			cout << word;
-			wordCounter += word.length() + 1;
+			cout << (wordCounter ? " " : "") << word;
+			wordCounter += (wordCounter != 0) + word.length();
 		}
 	}
 }
