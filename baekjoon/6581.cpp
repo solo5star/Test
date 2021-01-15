@@ -6,8 +6,6 @@
 #include <string>
 #include <vector>
 #include <math.h>
-#include <queue>
-#include <limits.h>
 
 using namespace std;
 
@@ -19,9 +17,7 @@ int main() {
 	string word;
 	int wordCounter = 0;
 
-	while (!cin.eof()) {
-		cin >> word;
-
+	while (cin >> word) {
 		if (word == "<br>") {
 			cout << "\n";
 			wordCounter = 0;
@@ -38,8 +34,13 @@ int main() {
 				wordCounter = 0;
 			}
 
-			cout << (wordCounter ? " " : "") << word;
-			wordCounter += (wordCounter != 0) + word.length();
+			if (wordCounter > 0) {
+				cout << " ";
+				wordCounter++;
+			}
+
+			cout << word;
+			wordCounter += word.length();
 		}
 	}
 }
