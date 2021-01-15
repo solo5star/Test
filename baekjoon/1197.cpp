@@ -36,8 +36,8 @@ typedef struct {
 
 priority_queue<edge> pq;
 
-unsigned long long prim() {
-	unsigned long long accumulatedCost = 0;
+int prim() {
+	int accumulatedCost = 0;
 
 	for (edge& e : nodes[1].edges) {
 		pq.push(e);
@@ -72,6 +72,7 @@ int main() {
 		cin >> from >> to >> cost;
 
 		nodes[from].edges.push_back({ to, cost });
+		nodes[to].edges.push_back({ from, cost });
 	}
 
 	cout << prim();
