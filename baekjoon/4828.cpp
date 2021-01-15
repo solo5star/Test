@@ -57,7 +57,7 @@ bool validate(string& str) {
 					if (!(
 						('0' <= escape[j] && escape[j] <= '9')
 						|| ('A' <= escape[j] && escape[j] <= 'F')
-						|| ('a' <= escape[j] && escape[j] <= 'z')
+						|| ('a' <= escape[j] && escape[j] <= 'f')
 					)) {
 						return false;
 					}
@@ -88,7 +88,6 @@ bool validate(string& str) {
 					closed = true; break;
 				}
 				else if (str[i] == '/') {
-					// </~~~~>
 					if (str[i - 1] == '<') {
 						isClosingTag = true;
 					}
@@ -98,6 +97,7 @@ bool validate(string& str) {
 
 						selfClosedTag = true; continue;
 					}
+					// </~~~~>
 					else {
 						return false;
 					}
@@ -116,6 +116,8 @@ bool validate(string& str) {
 			if (!closed) return false;
 
 			tag = tagBuilder.str();
+
+			if (tag == "") return false;
 
 			if (selfClosedTag) {
 
