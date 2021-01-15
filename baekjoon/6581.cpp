@@ -33,7 +33,7 @@ int main() {
 			wordCounter = 0;
 		}
 		else {
-			if (wordCounter + word.length() + 1 > 80) {
+			if (wordCounter + word.length() > 80) {
 				cout << "\n";
 				wordCounter = 0;
 			}
