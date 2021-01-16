@@ -7,11 +7,10 @@
 #include <vector>
 #include <math.h>
 #include <queue>
+#include <stack>
 
 using namespace std;
 
-// 1d: str1
-// 2d: str2
 int dp[1001][1001];
 
 int main() {
@@ -40,16 +39,21 @@ int main() {
 
 	cout << maxValue;
 
-	if (maxValue > 0) {
+	stack<char> ss;
+	if (maxValue) {
 		cout << "\n";
+		int i = str1.length();
 
-		int current = 0;
-		for (int i = 0; i < str2.length(); i++) {
-			if (current < dp[str1.length()][i+1]) {
-				current = dp[str1.length()][i+1];
-
-				cout << str2[i];
+		for (int j = str2.length(); j > 0; j--) {
+			if (dp[i][j] != dp[i][j - 1]) {
+				ss.push(str2[j - 1]);
+				i--;
 			}
+		}
+
+		while (!ss.empty()) {
+			cout << ss.top();
+			ss.pop();
 		}
 	}
 }
