@@ -26,12 +26,14 @@ int main() {
 
 	for (int i = 0; i < str1.length(); i++) {
 		for (int j = 0; j < str2.length(); j++) {
-			if (str1[i] == str2[j]) {
-				dp[i + 1][j + 1] = dp[i][j] + 1;
-			}
-			else {
-				dp[i + 1][j + 1] = max(dp[i + 1][j], dp[i][j + 1]);
-			}
+			dp[i + 1][j + 1] = max(max(
+				// if character matches, previous +1
+				dp[i][j] + (str1[i] == str2[j]),
+				// previous (left)
+				dp[i + 1][j]),
+				// previous (above)
+				dp[i][j + 1]);
+
 			maxValue = max(maxValue, dp[i + 1][j + 1]);
 		}
 	}
@@ -43,7 +45,7 @@ int main() {
 
 		int current = 0;
 		for (int i = 0; i < str2.length(); i++) {
-			if (current != dp[str1.length()][i+1]) {
+			if (current < dp[str1.length()][i+1]) {
 				current = dp[str1.length()][i+1];
 
 				cout << str2[i];
