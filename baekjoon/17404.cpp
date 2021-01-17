@@ -14,7 +14,6 @@ using namespace std;
 
 int dp[1000][3];
 int colors[1000][3];
-int first;
 
 int min(int a, int b, int c, int d) {
 	return min(min(a, b), min(c, d));
@@ -25,7 +24,7 @@ int main() {
 	cin.tie(nullptr);
 	cout.tie(nullptr);
 
-	const int R = 0, G = 1, B = 2;
+	const int MAX = 1000 * 1000 + 1;
 
 	int n;
 	cin >> n;
@@ -39,17 +38,16 @@ int main() {
 	int minValue = INT_MAX;
 
 	for (int k = 0; k < 3; k++) {
-		first = k;
-		dp[0][0] = dp[0][1] = dp[0][2] = colors[0][k];
+		dp[0][0] = dp[0][1] = dp[0][2] = MAX;
+		dp[0][k] = colors[0][k];
 
-		int i = 1;
-		for (; i < n; i++) {
+		for (int i = 1; i < n; i++) {
 			dp[i][0] = colors[i][0] + min(dp[i - 1][1], dp[i - 1][2]);
 			dp[i][1] = colors[i][1] + min(dp[i - 1][0], dp[i - 1][2]);
 			dp[i][2] = colors[i][2] + min(dp[i - 1][0], dp[i - 1][1]);
 		}
 
-		dp[n - 1][first] = INT_MAX;
+		dp[n - 1][k] = MAX;
 
 		minValue = min(minValue, dp[n-1][0], dp[n-1][1], dp[n-1][2]);
 	}
