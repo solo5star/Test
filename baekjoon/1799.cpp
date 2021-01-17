@@ -17,11 +17,10 @@ typedef struct {
 } point;
 
 int map[10][10];
+bool occupation[10][10];
 int width;
 
 vector<point> points;
-vector<point> bishops;
-
 int maxCount = 0;
 
 void dfs(int i = 0, int count = 0) {
@@ -29,11 +28,20 @@ void dfs(int i = 0, int count = 0) {
 
 	point& p = points[i];
 
-	for (point& b : bishops) {
-		if (abs(p.x - b.x) == abs(p.y - b.y)) return;
+	point edges[4] = {
+		{ p.x - abs(p.x - p.y), p.y - abs(p.x - p.y) },
+		{ min(p.x + p.y, width - 1), (p.x + p.y) % (width - 1) }
+	};
+	edges[2] = { edges[0].y, edges[0].x };
+	edges[3] = { edges[1].y, edges[1].x };
+
+	for (int i = 0; i < 4; i++) {
+		if (occupation[edges[i].y][edges[i].x]) return;
 	}
 
-	bishops.push_back(p);
+	for (int i = 0; i < 4; i++) {
+		occupation[edges[i].y][edges[i].x] = true;
+	}
 
 	count++;
 	maxCount = max(maxCount, count);
@@ -42,7 +50,9 @@ void dfs(int i = 0, int count = 0) {
 		dfs(i, count);
 	}
 
-	bishops.pop_back();
+	for (int i = 0; i < 4; i++) {
+		occupation[edges[i].y][edges[i].x] = false;
+	}
 }
 
 int main() {
@@ -53,7 +63,8 @@ int main() {
 	cin >> width;
 	for (int y = 0; y < width; y++) {
 		for (int x = 0; x < width; x++) {
-			cin >> map[y][x];
+			//cin >> map[y][x];
+			map[y][x] = 1;
 
 			if (map[y][x] == 1) points.push_back({ x, y });
 		}
