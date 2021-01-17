@@ -23,12 +23,6 @@ int parent(int a) {
 }
 
 void join(int a, int b) {
-	if (a < b) {
-		int temp = b;
-		b = a;
-		a = temp;
-	}
-
 	int _a = parent(a);
 	int _b = parent(b);
 
@@ -58,13 +52,14 @@ int main() {
 	}
 
 	int sum = 0;
+	int p;
 	for (int i = 1; i <= n; i++) {
-		i = parent(i);
+		p = parent(i);
 
-		if (visited[i]) continue;
-		visited[i] = true;
+		if (visited[p]) continue;
+		visited[p] = true;
 
-		sum += costs[i];
+		sum += costs[p];
 	}
 
 	if (sum > k) cout << "Oh no";
