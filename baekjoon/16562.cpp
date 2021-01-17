@@ -14,7 +14,6 @@ using namespace std;
 
 int parents[10001];
 int costs[10001];
-bool visited[10001];
 
 int parent(int a) {
 	if (parents[a] == a) return a;
@@ -28,7 +27,7 @@ void join(int a, int b) {
 
 	parents[_b] = _a;
 
-	costs[_a] = min(costs[_a], min(costs[a], costs[b]));
+	costs[_a] = min(min(costs[_a], costs[_b]), min(costs[a], costs[b]));
 }
 
 int main() {
@@ -40,8 +39,9 @@ int main() {
 	cin >> n >> m >> k;
 
 	for (int i = 1; i <= n; i++) {
-		cin >> costs[i];
 		parents[i] = i;
+
+		cin >> costs[i];
 	}
 
 	int a, b;
@@ -55,11 +55,10 @@ int main() {
 	int p;
 	for (int i = 1; i <= n; i++) {
 		p = parent(i);
-
-		if (visited[p]) continue;
-		visited[p] = true;
+		//cout << i << " parent is " << p << ": " << costs[p] << "\n";
 
 		sum += costs[p];
+		costs[p] = 0;
 	}
 
 	if (sum > k) cout << "Oh no";
