@@ -21,12 +21,17 @@ bool occupation[10][10];
 int width;
 
 vector<point> points;
+
+bool oddMode = true;
+
 int maxCount = 0;
 
 void dfs(int i = 0, int count = 0) {
 	if (i >= points.size()) return;
 
 	point& p = points[i];
+
+	if ((p.x + p.y) % 2 == (oddMode ? 1 : 0)) return;
 
 	point edges[4] = {
 		{ p.x - abs(p.x - p.y), p.y - abs(p.x - p.y) },
@@ -63,14 +68,23 @@ int main() {
 	cin >> width;
 	for (int y = 0; y < width; y++) {
 		for (int x = 0; x < width; x++) {
-			//cin >> map[y][x];
-			map[y][x] = 1;
+			cin >> map[y][x];
+			//map[y][x] = 1;
 
 			if (map[y][x] == 1) points.push_back({ x, y });
 		}
 	}
 
-	dfs();
+	int sum = 0;
 
-	cout << maxCount;
+	oddMode = true;
+	for(int i = 0; i < points.size(); i++) dfs(i);
+	sum += maxCount;
+
+	maxCount = 0;
+	oddMode = false;
+	for (int i = 0; i < points.size(); i++) dfs(i);
+	sum += maxCount;
+
+	cout << sum;
 }
