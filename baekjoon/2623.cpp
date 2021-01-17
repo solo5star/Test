@@ -37,11 +37,17 @@ bool topologySort() {
 		order.push(n);
 
 		for (int _n : nodes[n]) {
-			if (--indegrees[_n] == 0) q.push(_n);
+			indegrees[_n]--;
+
+			if (indegrees[_n] == 0) q.push(_n);
 		}
+
+		nodes[n].clear();
 	}
 
 	for (int i = 1; i <= nodeCount; i++) {
+		if (nodes[i].size() > 0) return false;
+
 		if (!visited[i]) order.push(i);
 	}
 
