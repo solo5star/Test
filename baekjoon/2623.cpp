@@ -25,6 +25,8 @@ bool topologySort() {
 		if (indegrees[i] == 0) q.push(i);
 	}
 
+	if (q.empty()) return false;
+
 	while (!q.empty()) {
 		int n = q.front();
 		q.pop();
@@ -37,6 +39,10 @@ bool topologySort() {
 		for (int _n : nodes[n]) {
 			if (--indegrees[_n] == 0) q.push(_n);
 		}
+	}
+
+	for (int i = 1; i <= nodeCount; i++) {
+		if (!visited[i]) order.push(i);
 	}
 
 	return true;
