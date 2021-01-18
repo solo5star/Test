@@ -21,6 +21,29 @@ int height;
 
 int emptyCount = 0;
 
+bool hasCCTV(int x, int y, int id) {
+	if (map[y][x] == WALL) return false;
+
+	return map[y][x] & (1 << id);
+}
+
+void removeCCTV(int x, int y, int id) {
+	if (map[y][x] == WALL) return;
+	if (map[y][x] == 0) return;
+
+	map[y][x] &= ~(1 << id);
+
+	if (map[y][x] == 0) emptyCount++;
+}
+
+void addCCTV(int x, int y, int id) {
+	if (map[y][x] == WALL) return;
+
+	if (map[y][x] == 0) emptyCount--;
+
+	map[y][x] |= (1 << id);
+}
+
 class CCTV {
 public:
 	static int counter;
@@ -59,18 +82,7 @@ public:
 			for (int _x = x; 0 <= _x && _x < width; _x += __x) {
 				if (map[y][_x] == WALL) break;
 
-				if (set) {
-					if (map[y][_x] == EMPTY) {
-						map[y][_x] = id;
-						emptyCount--;
-					}
-				}
-				else {
-					if (map[y][_x] == id) {
-						map[y][_x] = EMPTY;
-						emptyCount++;
-					}
-				}
+				set ? addCCTV(_x, y, id) : removeCCTV(_x, y, id);
 			}
 			break;
 
@@ -79,18 +91,7 @@ public:
 			for (int _y = y; 0 <= _y && _y < height; _y += __y) {
 				if (map[_y][x] == WALL) break;
 
-				if (set) {
-					if (map[_y][x] == EMPTY) {
-						map[_y][x] = id;
-						emptyCount--;
-					}
-				}
-				else {
-					if (map[_y][x] == id) {
-						map[_y][x] = EMPTY;
-						emptyCount++;
-					}
-				}
+				set ? addCCTV(x, _y, id) : removeCCTV(x, _y, id);
 			}
 			break;
 		}
@@ -242,16 +243,15 @@ int main() {
 			case 6:
 				map[y][x] = WALL;
 				break;
-			case EMPTY:
-				emptyCount++;
-				break;
 			default:
 				break;
 			}
 
+			emptyCount += map[y][x] != WALL;
+
 			if (cctv != nullptr) {
 				installed[installedCount++] = cctv;
-				map[y][x] = cctv->id;
+				addCCTV(x, y, cctv->id);
 			}
 		}
 	}
