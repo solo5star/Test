@@ -40,23 +40,18 @@ typedef struct {
 	int value;
 } point;
 
-vector<vector<int>> sparseMatrix;
-vector<point> points;
+vector<int> sparseMatrix[729];
+int rows;
+point points[729];
 
 vector<int> solution;
-
-node* createNode() {
-	node* n = new node;
-	memset(n, 0, sizeof(node));
-
-	return n;
-}
 
 void init() {
 	// initialize columns
 	// column[0] is head
 	for (int i = 0; i < columnCount; i++) {
-		columns[i] = createNode();
+		columns[i] = new node;
+		columns[i]->size = 0;
 	}
 
 	// link each columns
@@ -69,7 +64,7 @@ void init() {
 	}
 
 	// link head
-	head = createNode();
+	head = new node;
 
 	head->right = columns[0];
 	head->left = head->right->left;
@@ -77,12 +72,12 @@ void init() {
 	head->left->right = head;
 
 	// make dancing links
-	for (int row = 0; row < sparseMatrix.size(); row++) {
+	for (int row = 0; row < rows; row++) {
 		node* previous = nullptr;
 		node* current = nullptr;
 
 		for (int col : sparseMatrix[row]) {
-			current = createNode();
+			current = new node;
 			current->row = row;
 
 			// link with column
@@ -150,10 +145,6 @@ bool search() {
 			selected = it;
 		}
 	}
-
-#ifdef DEBUG
-	cout << "SELECTED: " << selected->size << "\n";
-#endif
 	
 	// cover the selected column
 	cover(selected);
@@ -192,7 +183,7 @@ void sudoku() {
 			for (int i = 0; i < 9; i++) {
 				if (num != 0) i = num - 1;
 
-				sparseMatrix.push_back({
+				sparseMatrix[rows] = {
 					// fill any number in (x, y)
 					81 * 0 + (9 * y + x),
 					// fill unique number (0-9) in same row
@@ -201,8 +192,10 @@ void sudoku() {
 					81 * 2 + (9 * x + i),
 					// fill unique number (0-9) in sub-square
 					81 * 3 + (9 * (3 * (y / 3) + (x / 3)) + i)
-				});
-				points.push_back({ x, y, i + 1 });
+				};
+				points[rows] = { x, y, i + 1 };
+
+				rows++;
 
 				if (num != 0) break;
 			}
@@ -212,18 +205,6 @@ void sudoku() {
 	columnCount = 81 * 4;
 
 	init();
-
-#ifdef DEBUG
-	cout << "PRINT COLUMNS SIZE: \n";
-	int counter = 0;
-	for (node* it = head->right; it != head; it = it->right) {
-		cout << it->size << " ";
-		if (++counter % 81 == 0) {
-			cout << "\n";
-		}
-	}
-	cout << "PRINT END(" << counter << ")\n";
-#endif
 
 	search();
 
@@ -237,37 +218,6 @@ void sudoku() {
 		}
 		cout << "\n";
 	}
-}
-
-void test() {
-	/**
-	 * X = {1, 2, 3, 4, 5, 6, 7}
-	 *
-	 * A = {      3,    5, 6   }
-	 * B = {1,       4,       7}
-	 * C = {   2, 3,       6   }
-	 * D = {1,       4         }
-	 * E = {   2,             7}
-	 * F = {         4, 5,    7}
-	 */
-	sparseMatrix.push_back({ 2, 4, 5 });
-	sparseMatrix.push_back({ 1, 3, 6 });
-	sparseMatrix.push_back({ 1, 2, 5 });
-	sparseMatrix.push_back({ 0, 3 });
-	sparseMatrix.push_back({ 1, 6 });
-	sparseMatrix.push_back({ 3, 4, 6 });
-
-	columnCount = 7;
-
-	init();
-
-	search();
-
-	for (int i : solution) {
-		cout << i << " ";
-	}
-
-	// expected result: 0 3 4
 }
 
 int main() {
