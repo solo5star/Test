@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <cstring>
-#include <chrono>
 
 using namespace std;
 
@@ -25,6 +24,9 @@ typedef struct node {
 node head;
 node columns[324];
 int columnCount;
+
+node nodeStore[2916];
+int nodeCount = 0;
 
 typedef struct {
 	int x;
@@ -64,7 +66,7 @@ void init() {
 		for (j = 0; j < 4; j++) {
 			col = sparseMatrix[row][j];
 
-			current = new node;
+			current = &nodeStore[nodeCount++];
 			current->row = row;
 
 			// link with column
