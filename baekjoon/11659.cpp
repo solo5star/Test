@@ -13,7 +13,7 @@
 
 using namespace std;
 
-int tree[200000];
+int tree[262144];
 int nums[100000];
 int length;
 
