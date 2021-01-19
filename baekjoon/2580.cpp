@@ -1,16 +1,11 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <iostream>
-#include <iomanip>
+#include <cstring>
 #include <utility>
 #include <algorithm>
 #include <string>
 #include <vector>
-#include <math.h>
-#include <queue>
-#include <stack>
-#include <limits.h>
-#include <cstring>
 #include <chrono>
 
 using namespace std;
@@ -31,7 +26,7 @@ typedef struct node {
 	node* left;
 } node;
 
-node* head;
+node head;
 node columns[324];
 int columnCount;
 
@@ -41,37 +36,9 @@ typedef struct {
 	int value;
 } point;
 
-vector<int> sparseMatrix[729];
+int sparseMatrix[729][4];
 int rows;
 point points[729];
-
-void cover(node* column) {
-	column->left->right = column->right;
-	column->right->left = column->left;
-
-	for (node* it = column->down; it != column; it = it->down) {
-		for (node* jt = it->right; jt != it; jt = jt->right) {
-			jt->up->down = jt->down;
-			jt->down->up = jt->up;
-
-			jt->column->size--;
-		}
-	}
-}
-
-void uncover(node* column) {
-	for (node* it = column->down; it != column; it = it->down) {
-		for (node* jt = it->right; jt != it; jt = jt->right) {
-			jt->up->down = jt;
-			jt->down->up = jt;
-
-			jt->column->size++;
-		}
-	}
-
-	column->left->right = column;
-	column->right->left = column;
-}
 
 void init() {
 	// initialize columns
@@ -84,13 +51,10 @@ void init() {
 		columns[i].down = &columns[i];
 	}
 
-	// link head
-	head = new node;
-
-	head->right = &columns[0];
-	head->left = head->right->left;
-	head->right->left = head;
-	head->left->right = head;
+	head.right = &columns[0];
+	head.left = head.right->left;
+	head.right->left = &head;
+	head.left->right = &head;
 
 	// make dancing links
 	for (int row = 0; row < rows; row++) {
@@ -126,15 +90,44 @@ void init() {
 	}
 }
 
+void cover(node* column) {
+	column->left->right = column->right;
+	column->right->left = column->left;
+	for (node* it = column->down; it != column; it = it->down) {
+		for (node* jt = it->right; jt != it; jt = jt->right) {
+			jt->up->down = jt->down;
+			jt->down->up = jt->up;
+			jt->column->size--;
+		}
+	}
+}
+
+void uncover(node* column) {
+	for (node* it = column->down; it != column; it = it->down) {
+		for (node* jt = it->right; jt != it; jt = jt->right) {
+			jt->up->down = jt;
+			jt->down->up = jt;
+			jt->column->size++;
+		}
+	}
+	column->left->right = column;
+	column->right->left = column;
+}
+
 int table[9][9];
 
 bool search() {
-	if (head->right == head) return true;
+	if (head.right == &head) return true;
 
 	// select a column which has lowest size
-	node* selected = head->right;
-	int lowest = head->right->size;
-	for (node* it = selected->right; it != head; it = it->right) {
+	node* selected = head.right;
+	int lowest = selected->size;
+	for (node* it = selected->right; it != &head; it = it->right) {
+		if (it->size == 1) {
+			selected = it;
+			break;
+		}
+
 		if (it->size < lowest) {
 			lowest = it->size;
 			selected = it;
@@ -176,17 +169,21 @@ void sudoku() {
 			for (int i = 0; i < 9; i++) {
 				if (num != 0) i = num - 1;
 
-				sparseMatrix[rows] = {
-					// fill any number in (x, y)
-					81 * 0 + (9 * y + x),
-					// fill unique number (0-9) in same row
-					81 * 1 + (9 * y + i),
-					// fill unique number (0-9) in same column
-					81 * 2 + (9 * x + i),
-					// fill unique number (0-9) in sub-square
-					81 * 3 + (9 * (3 * (y / 3) + (x / 3)) + i)
-				};
-				points[rows] = { x, y, i + 1 };
+				// fill any number in (x, y)
+				sparseMatrix[rows][0] = 81 * 0 + (9 * y + x);
+
+				// fill unique number (0-9) in same row
+				sparseMatrix[rows][1] = 81 * 1 + (9 * y + i);
+
+				// fill unique number (0-9) in same column
+				sparseMatrix[rows][2] = 81 * 2 + (9 * x + i);
+
+				// fill unique number (0-9) in sub-square
+				sparseMatrix[rows][3] = 81 * 3 + (9 * (3 * (y / 3) + (x / 3)) + i);
+
+				points[rows].x = x;
+				points[rows].y = y;
+				points[rows].value = i + 1;
 
 				rows++;
 
@@ -203,9 +200,9 @@ void sudoku() {
 
 	for (int y = 0; y < 9; y++) {
 		for (int x = 0; x < 9; x++) {
-			cout << table[y][x] << " ";
+			cout << table[y][x] << ' ';
 		}
-		cout << "\n";
+		cout << '\n';
 	}
 }
 
@@ -219,6 +216,5 @@ int main() {
 	//auto end = chrono::steady_clock::now();
 
 	//auto diff = end - start;
-
 	//cout << chrono::duration<double, milli>(diff).count() << " ms\n";
 }
