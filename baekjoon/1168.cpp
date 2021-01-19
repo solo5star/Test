@@ -15,6 +15,7 @@ using namespace std;
 
 typedef struct node {
 	int id;
+	node* previous;
 	node* next;
 } node;
 
@@ -32,22 +33,26 @@ int main() {
 
 	for (int i = 1; i <= n; i++) {
 		nodes[i].id = i;
-		nodes[i].next = &nodes[i % n + 1];
+		nodes[i].previous = &nodes[i == 1 ? n : i - 1];
+		nodes[i].next = &nodes[i == n ? 1 : i + 1];
 	}
 
 	cout << "<";
 
 	remain = n;
 	node* current = &nodes[1];
-	node* removed;
 
 	while (remain) {
-		removed = current->next->next;
-		current->next->next = removed->next;
-		
-		current = removed->next;
-		remain--;
+		for (int i = 1; i < k; i++) {
+			current = current->next;
+		}
 
-		cout << removed->id << (remain ? ", " : ">");
+		remain--;
+		cout << current->id << (remain ? ", " : ">");
+
+		current->previous->next = current->next;
+		current->next->previous = current->previous;
+
+		current = current->next;
 	}
 }
