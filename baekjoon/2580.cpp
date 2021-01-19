@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include <cstring>
+#include <vector>
+#include <chrono>
 
 using namespace std;
 
@@ -22,20 +24,19 @@ typedef struct node {
 } node;
 
 node* head;
-node* columns[324];
-int columnCount;
 
 typedef struct {
 	int x;
 	int y;
-	char value;
+	int value;
 } point;
 
-int sparseMatrix[729][4];
-int rows;
-point points[729];
+vector<vector<int>> sparseMatrix;
+vector<point> points;
 
-void init() {
+void init(int columnCount) {
+	node** columns = new node*[columnCount];
+
 	// initialize columns
 	// link each columns
 	for (int i = 0; i < columnCount; i++) {
@@ -60,15 +61,13 @@ void init() {
 	node* previous;
 	node* current;
 
-	int row, j, col;
+	int rows = sparseMatrix.size();
 	// make dancing links
-	for (row = 0; row < rows; row++) {
+	for (int row = 0; row < rows; row++) {
 		previous = NULL;
 		current = NULL;
 
-		for (j = 0; j < 4; j++) {
-			col = sparseMatrix[row][j];
-
+		for (int col : sparseMatrix[row]) {
 			current = new node;
 			current->row = row;
 
@@ -216,30 +215,26 @@ void sudoku() {
 					|| boxed[y / 3][x / 3][i]
 				) continue;
 
-				// fill any number in (x, y)
-				sparseMatrix[rows][0] = 81 * 0 + (9 * y + x);
+				sparseMatrix.push_back({
+					// fill any number in (x, y)
+					81 * 0 + (9 * y + x),
 
-				// fill unique number (0-9) in same row
-				sparseMatrix[rows][1] = 81 * 1 + (9 * y + i);
+					// fill unique number (0-9) in same row
+					81 * 1 + (9 * y + i),
 
-				// fill unique number (0-9) in same column
-				sparseMatrix[rows][2] = 81 * 2 + (9 * x + i);
+					// fill unique number (0-9) in same column
+					81 * 2 + (9 * x + i),
 
-				// fill unique number (0-9) in boxed
-				sparseMatrix[rows][3] = 81 * 3 + (9 * (3 * (y / 3) + (x / 3)) + i);
+					// fill unique number (0-9) in boxed
+					81 * 3 + (9 * (3 * (y / 3) + (x / 3)) + i)
+				});
 
-				points[rows].x = x;
-				points[rows].y = y;
-				points[rows].value = i + 1;
-
-				rows++;
+				points.push_back({ x, y, i + 1 });
 			}
 		}
 	}
 
-	columnCount = 324;
-
-	init();
+	init(324);
 
 	search();
 
@@ -256,11 +251,11 @@ int main() {
 	cin.tie(nullptr);
 	cout.tie(nullptr);
 
-	// auto start = chrono::steady_clock::now();
+	//auto start = chrono::steady_clock::now();
 	sudoku();
-	// auto end = chrono::steady_clock::now();
+	//auto end = chrono::steady_clock::now();
 
-	// auto diff = end - start;
+	//auto diff = end - start;
 
-	// cout << chrono::duration<double, milli>(diff).count() << " ms\n";
+	//cout << chrono::duration<double, milli>(diff).count() << " ms\n";
 }
