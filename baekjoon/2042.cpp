@@ -13,11 +13,13 @@
 
 using namespace std;
 
-int tree[2097152];
-int nums[1000000];
+typedef long long int_64;
+
+int_64 tree[2097152];
+int_64 nums[1000000];
 int length;
 
-int _init(int node, int start, int end) {
+int_64 _init(int node, int start, int end) {
 	if (start == end) return tree[node] = nums[start];
 
 	int mid = (start + end) / 2;
@@ -29,7 +31,7 @@ void init() {
 	_init(1, 0, length - 1);
 }
 
-void _update(int node, int start, int end, int index, int diff) {
+void _update(int node, int start, int end, int index, int_64 diff) {
 	// out of bounds
 	if (index < start || end < index) return;
 
@@ -44,11 +46,11 @@ void _update(int node, int start, int end, int index, int diff) {
 	_update(node * 2 + 1, mid + 1, end, index, diff);
 }
 
-void update(int index, int value) {
+void update(int index, int_64 value) {
 	_update(1, 0, length - 1, index, value - nums[index]);
 }
 
-int _sum(int node, int start, int end, int left, int right) {
+int_64 _sum(int node, int start, int end, int left, int right) {
 	// out of bounds
 	if (start > right || end < left) return 0;
 
@@ -59,7 +61,7 @@ int _sum(int node, int start, int end, int left, int right) {
 	return _sum(node * 2, start, mid, left, right) + _sum(node * 2 + 1, mid + 1, end, left, right);
 }
 
-int sum(int from, int to) {
+int_64 sum(int from, int to) {
 	return _sum(1, 0, length - 1, from, to);
 }
 
@@ -77,7 +79,8 @@ int main() {
 
 	init();
 
-	int op, a, b;
+	int op;
+	int_64 a, b;
 	k += m;
 	while (k--) {
 		cin >> op >> a >> b;
