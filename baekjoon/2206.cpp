@@ -25,13 +25,13 @@ typedef struct {
 
 queue<state> q;
 
-bool visited[1000][1000];
+bool visited[2][1000][1000];
 
 void push(state s) {
 	if (s.x < 0 || s.y < 0 || s.x >= width || s.y >= height) return;
 
-	if (visited[s.y][s.x]) return;
-	visited[s.y][s.x] = true;
+	if (visited[s.chance][s.y][s.x]) return;
+	visited[s.chance][s.y][s.x] = true;
 
 	q.push(s);
 }
