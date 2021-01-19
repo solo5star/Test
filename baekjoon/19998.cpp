@@ -1,16 +1,12 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <iostream>
-#include <iomanip>
+#include <cstring>
 #include <utility>
 #include <algorithm>
 #include <string>
 #include <vector>
 #include <math.h>
-#include <queue>
-#include <stack>
-#include <limits.h>
-#include <cstring>
 
 using namespace std;
 
@@ -31,7 +27,7 @@ typedef struct node {
 } node;
 
 node* head;
-node* columns[324];
+node columns[324];
 int columnCount;
 
 typedef struct {
@@ -44,29 +40,21 @@ vector<int> sparseMatrix[729];
 int rows;
 point points[729];
 
-vector<int> solution;
-
 void init() {
 	// initialize columns
-	// column[0] is head
-	for (int i = 0; i < columnCount; i++) {
-		columns[i] = new node;
-		columns[i]->size = 0;
-	}
-
 	// link each columns
 	for (int i = 0; i < columnCount; i++) {
-		columns[i]->right = columns[(i + 1) % columnCount];
-		columns[i]->right->left = columns[i];
+		columns[i].right = &columns[(i + 1) % columnCount];
+		columns[i].right->left = &columns[i];
 
-		columns[i]->up = columns[i];
-		columns[i]->down = columns[i];
+		columns[i].up = &columns[i];
+		columns[i].down = &columns[i];
 	}
 
 	// link head
 	head = new node;
 
-	head->right = columns[0];
+	head->right = &columns[0];
 	head->left = head->right->left;
 	head->right->left = head;
 	head->left->right = head;
@@ -81,14 +69,14 @@ void init() {
 			current->row = row;
 
 			// link with column
-			current->column = columns[col];
+			current->column = &columns[col];
 			current->column->size++;
 
 			// link with bottom node
-			current->up = columns[col]->up;
-			current->down = columns[col];
-			columns[col]->up->down = current;
-			columns[col]->up = current;
+			current->up = columns[col].up;
+			current->down = &columns[col];
+			columns[col].up->down = current;
+			columns[col].up = current;
 
 			// link with left and right
 			if (previous == nullptr) {
@@ -133,6 +121,8 @@ void uncover(node* column) {
 	column->right->left = column;
 }
 
+int table[9][9];
+
 bool search() {
 	if (head->right == head) return true;
 
@@ -154,11 +144,10 @@ bool search() {
 			cover(jt->column);
 		}
 
-		solution.push_back(it->row);
-
-		if (search()) return true;
-
-		solution.pop_back();
+		if (search()) {
+			table[points[it->row].y][points[it->row].x] = points[it->row].value;
+			return true;
+		}
 
 		for (node* jt = it->right; jt != it; jt = jt->right) {
 			uncover(jt->column);
@@ -171,14 +160,13 @@ bool search() {
 	return false;
 }
 
-int table[9][9];
-
 void sudoku() {
-	int num;
+	char num;
 
 	for (int y = 0; y < 9; y++) {
 		for (int x = 0; x < 9; x++) {
 			cin >> num;
+			num -= '0';
 
 			for (int i = 0; i < 9; i++) {
 				if (num != 0) i = num - 1;
@@ -208,15 +196,11 @@ void sudoku() {
 
 	search();
 
-	for (int i : solution) {
-		table[points[i].y][points[i].x] = points[i].value;
-	}
-
 	for (int y = 0; y < 9; y++) {
 		for (int x = 0; x < 9; x++) {
-			cout << table[y][x] << " ";
+			cout << table[y][x] << ' ';
 		}
-		cout << "\n";
+		cout << '\n';
 	}
 }
 
@@ -225,5 +209,11 @@ int main() {
 	cin.tie(nullptr);
 	cout.tie(nullptr);
 
+	//auto start = chrono::steady_clock::now();
 	sudoku();
+	//auto end = chrono::steady_clock::now();
+
+	//auto diff = end - start;
+
+	//cout << chrono::duration<double, milli>(diff).count() << " ms\n";
 }
