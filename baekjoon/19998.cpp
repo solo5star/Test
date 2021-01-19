@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <cstring>
+#include <chrono>
 
 using namespace std;
 
@@ -167,9 +168,10 @@ bool search() {
 
 void sudoku() {
 	char num;
+	int x, y;
 
-	for (int y = 0; y < 9; y++) {
-		for (int x = 0; x < 9; x++) {
+	for (y = 0; y < 9; y++) {
+		for (x = 0; x < 9; x++) {
 			cin >> num;
 			num -= '0';
 
@@ -205,8 +207,8 @@ void sudoku() {
 
 	search();
 
-	for (int y = 0; y < 9; y++) {
-		for (int x = 0; x < 9; x++) {
+	for (y = 0; y < 9; y++) {
+		for (x = 0; x < 9; x++) {
 			cout << table[y][x] << ' ';
 		}
 		cout << '\n';
