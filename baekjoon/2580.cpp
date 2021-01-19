@@ -10,6 +10,7 @@
 #include <queue>
 #include <stack>
 #include <limits.h>
+#include <cstring>
 
 using namespace std;
 
@@ -46,7 +47,7 @@ vector<int> solution;
 
 node* createNode() {
 	node* n = new node;
-	memset(n, 0, sizeof node);
+	memset(n, 0, sizeof(node));
 
 	return n;
 }
