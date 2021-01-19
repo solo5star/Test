@@ -48,6 +48,8 @@ void _update(int node, int start, int end, int index, int_64 diff) {
 
 void update(int index, int_64 value) {
 	_update(1, 0, length - 1, index, value - nums[index]);
+
+	nums[index] = value;
 }
 
 int_64 _sum(int node, int start, int end, int left, int right) {
