@@ -2,11 +2,6 @@
 
 #include <iostream>
 #include <cstring>
-#include <utility>
-#include <algorithm>
-#include <string>
-#include <vector>
-#include <chrono>
 
 using namespace std;
 
@@ -33,7 +28,7 @@ int columnCount;
 typedef struct {
 	int x;
 	int y;
-	int value;
+	char value;
 } point;
 
 int sparseMatrix[729][4];
@@ -56,12 +51,18 @@ void init() {
 	head.right->left = &head;
 	head.left->right = &head;
 
-	// make dancing links
-	for (int row = 0; row < rows; row++) {
-		node* previous = nullptr;
-		node* current = nullptr;
+	node* previous;
+	node* current;
 
-		for (int col : sparseMatrix[row]) {
+	int row, j, col;
+	// make dancing links
+	for (row = 0; row < rows; row++) {
+		previous = nullptr;
+		current = nullptr;
+
+		for (j = 0; j < 4; j++) {
+			col = sparseMatrix[row][j];
+
 			current = new node;
 			current->row = row;
 
@@ -90,11 +91,13 @@ void init() {
 	}
 }
 
-void cover(node* column) {
+inline void cover(node* column) {
+	node* it;
+	node* jt;
 	column->left->right = column->right;
 	column->right->left = column->left;
-	for (node* it = column->down; it != column; it = it->down) {
-		for (node* jt = it->right; jt != it; jt = jt->right) {
+	for (it = column->down; it != column; it = it->down) {
+		for (jt = it->right; jt != it; jt = jt->right) {
 			jt->up->down = jt->down;
 			jt->down->up = jt->up;
 			jt->column->size--;
@@ -102,9 +105,11 @@ void cover(node* column) {
 	}
 }
 
-void uncover(node* column) {
-	for (node* it = column->down; it != column; it = it->down) {
-		for (node* jt = it->right; jt != it; jt = jt->right) {
+inline void uncover(node* column) {
+	node* it;
+	node* jt;
+	for (it = column->down; it != column; it = it->down) {
+		for (jt = it->right; jt != it; jt = jt->right) {
 			jt->up->down = jt;
 			jt->down->up = jt;
 			jt->column->size++;
@@ -114,15 +119,17 @@ void uncover(node* column) {
 	column->right->left = column;
 }
 
-int table[9][9];
+char table[9][9];
 
 bool search() {
 	if (head.right == &head) return true;
 
+	node* it;
+	node* jt;
 	// select a column which has lowest size
 	node* selected = head.right;
 	int lowest = selected->size;
-	for (node* it = selected->right; it != &head; it = it->right) {
+	for (it = selected; it != &head; it = it->right) {
 		if (it->size == 1) {
 			selected = it;
 			break;
@@ -137,8 +144,8 @@ bool search() {
 	// cover the selected column
 	cover(selected);
 
-	for (node* it = selected->down; it != selected; it = it->down) {
-		for (node* jt = it->right; jt != it; jt = jt->right) {
+	for (it = selected->down; it != selected; it = it->down) {
+		for (jt = it->right; jt != it; jt = jt->right) {
 			cover(jt->column);
 		}
 
@@ -147,7 +154,7 @@ bool search() {
 			return true;
 		}
 
-		for (node* jt = it->right; jt != it; jt = jt->right) {
+		for (jt = it->right; jt != it; jt = jt->right) {
 			uncover(jt->column);
 		}
 	}
@@ -183,7 +190,7 @@ void sudoku() {
 
 				points[rows].x = x;
 				points[rows].y = y;
-				points[rows].value = i + 1;
+				points[rows].value = i + 1 + '0';
 
 				rows++;
 
@@ -192,7 +199,7 @@ void sudoku() {
 		}
 	}
 
-	columnCount = 81 * 4;
+	columnCount = 324;
 
 	init();
 
