@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <cstring>
+#include <chrono>
 
 using namespace std;
 
@@ -24,6 +25,9 @@ typedef struct node {
 node head;
 node columns[324];
 int columnCount;
+
+node nodeStore[2916];
+int nodeCount = 0;
 
 typedef struct {
 	int x;
@@ -63,7 +67,7 @@ void init() {
 		for (j = 0; j < 4; j++) {
 			col = sparseMatrix[row][j];
 
-			current = new node;
+			current = &nodeStore[nodeCount++];
 			current->row = row;
 
 			// link with column
@@ -167,9 +171,10 @@ bool search() {
 
 void sudoku() {
 	char num;
+	int x, y;
 
-	for (int y = 0; y < 9; y++) {
-		for (int x = 0; x < 9; x++) {
+	for (y = 0; y < 9; y++) {
+		for (x = 0; x < 9; x++) {
 			cin >> num;
 			num -= '0';
 
@@ -205,8 +210,8 @@ void sudoku() {
 
 	search();
 
-	for (int y = 0; y < 9; y++) {
-		for (int x = 0; x < 9; x++) {
+	for (y = 0; y < 9; y++) {
+		for (x = 0; x < 9; x++) {
 			cout << table[y][x] << ' ';
 		}
 		cout << '\n';
