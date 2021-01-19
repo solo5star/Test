@@ -19,12 +19,9 @@ typedef struct node {
 	struct node* left;
 } node;
 
-node head;
-node columns[324];
+node* head;
+node* columns[324];
 int columnCount;
-
-node nodeStore[2916];
-int nodeCount = 0;
 
 typedef struct {
 	int x;
@@ -40,17 +37,22 @@ void init() {
 	// initialize columns
 	// link each columns
 	for (int i = 0; i < columnCount; i++) {
-		columns[i].right = &columns[(i + 1) % columnCount];
-		columns[i].right->left = &columns[i];
-
-		columns[i].up = &columns[i];
-		columns[i].down = &columns[i];
+		columns[i] = (node*)malloc(sizeof(node));
 	}
 
-	head.right = &columns[0];
-	head.left = head.right->left;
-	head.right->left = &head;
-	head.left->right = &head;
+	for (int i = 0; i < columnCount; i++) {
+		columns[i]->right = columns[(i + 1) % columnCount];
+		columns[i]->right->left = columns[i];
+
+		columns[i]->up = columns[i];
+		columns[i]->down = columns[i];
+	}
+
+	head = (node*)malloc(sizeof(node));
+	head->right = columns[0];
+	head->left = head->right->left;
+	head->right->left = head;
+	head->left->right = head;
 
 	node* previous;
 	node* current;
@@ -64,18 +66,18 @@ void init() {
 		for (j = 0; j < 4; j++) {
 			col = sparseMatrix[row][j];
 
-			current = &nodeStore[nodeCount++];
+			current = (node*)malloc(sizeof(node));
 			current->row = row;
 
 			// link with column
-			current->column = &columns[col];
+			current->column = columns[col];
 			current->column->size++;
 
 			// link with bottom node
-			current->up = columns[col].up;
-			current->down = &columns[col];
-			columns[col].up->down = current;
-			columns[col].up = current;
+			current->up = columns[col]->up;
+			current->down = columns[col];
+			columns[col]->up->down = current;
+			columns[col]->up = current;
 
 			// link with left and right
 			if (previous == NULL) {
@@ -123,14 +125,14 @@ void uncover(node* column) {
 char table[9][9];
 
 int search() {
-	if (head.right == &head) return 1;
+	if (head->right == head) return 1;
 
 	node* it;
 	node* jt;
 	// select a column which has lowest size
-	node* selected = head.right;
+	node* selected = head->right;
 	int lowest = selected->size;
-	for (it = selected; it != &head; it = it->right) {
+	for (it = selected; it != head; it = it->right) {
 		if (it->size == 1) {
 			selected = it;
 			break;
@@ -166,7 +168,7 @@ int search() {
 	return 0;
 }
 
-void sudoku() {
+int main() {
 	int num;
 	int x, y, i;
 
@@ -212,8 +214,4 @@ void sudoku() {
 		}
 		printf("\n");
 	}
-}
-
-int main() {
-	sudoku();
 }
