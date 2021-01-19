@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <cstring>
-#include <chrono>
 
 using namespace std;
 
@@ -22,12 +21,9 @@ typedef struct node {
 	node* left;
 } node;
 
-node head;
-node columns[324];
+node* head;
+node* columns[324];
 int columnCount;
-
-node nodeStore[2916];
-int nodeCount = 0;
 
 typedef struct {
 	int x;
@@ -43,17 +39,23 @@ void init() {
 	// initialize columns
 	// link each columns
 	for (int i = 0; i < columnCount; i++) {
-		columns[i].right = &columns[(i + 1) % columnCount];
-		columns[i].right->left = &columns[i];
-
-		columns[i].up = &columns[i];
-		columns[i].down = &columns[i];
+		columns[i] = new node;
+		columns[i]->size = 0;
 	}
 
-	head.right = &columns[0];
-	head.left = head.right->left;
-	head.right->left = &head;
-	head.left->right = &head;
+	for (int i = 0; i < columnCount; i++) {
+		columns[i]->right = columns[(i + 1) % columnCount];
+		columns[i]->right->left = columns[i];
+
+		columns[i]->up = columns[i];
+		columns[i]->down = columns[i];
+	}
+
+	head = new node;
+	head->right = columns[0];
+	head->left = head->right->left;
+	head->right->left = head;
+	head->left->right = head;
 
 	node* previous;
 	node* current;
@@ -61,27 +63,27 @@ void init() {
 	int row, j, col;
 	// make dancing links
 	for (row = 0; row < rows; row++) {
-		previous = nullptr;
-		current = nullptr;
+		previous = NULL;
+		current = NULL;
 
 		for (j = 0; j < 4; j++) {
 			col = sparseMatrix[row][j];
 
-			current = &nodeStore[nodeCount++];
+			current = new node;
 			current->row = row;
 
 			// link with column
-			current->column = &columns[col];
+			current->column = columns[col];
 			current->column->size++;
 
 			// link with bottom node
-			current->up = columns[col].up;
-			current->down = &columns[col];
-			columns[col].up->down = current;
-			columns[col].up = current;
+			current->up = columns[col]->up;
+			current->down = columns[col];
+			columns[col]->up->down = current;
+			columns[col]->up = current;
 
 			// link with left and right
-			if (previous == nullptr) {
+			if (previous == NULL) {
 				previous = current;
 				previous->right = current;
 			}
@@ -93,9 +95,17 @@ void init() {
 			previous = current;
 		}
 	}
+
+	// filter 0 sized column
+	for (node* it = head->right; it != head; it = it->right) {
+		if (it->size == 0) {
+			it->left->right = it->right;
+			it->right->left = it->left;
+		}
+	}
 }
 
-inline void cover(node* column) {
+void cover(node* column) {
 	node* it;
 	node* jt;
 	column->left->right = column->right;
@@ -109,7 +119,7 @@ inline void cover(node* column) {
 	}
 }
 
-inline void uncover(node* column) {
+void uncover(node* column) {
 	node* it;
 	node* jt;
 	for (it = column->down; it != column; it = it->down) {
@@ -123,17 +133,17 @@ inline void uncover(node* column) {
 	column->right->left = column;
 }
 
-char table[9][9];
+int table[9][9];
 
 bool search() {
-	if (head.right == &head) return true;
+	if (head->right == head) return true;
 
 	node* it;
 	node* jt;
 	// select a column which has lowest size
-	node* selected = head.right;
+	node* selected = head->right;
 	int lowest = selected->size;
-	for (it = selected; it != &head; it = it->right) {
+	for (it = selected; it != head; it = it->right) {
 		if (it->size == 1) {
 			selected = it;
 			break;
@@ -147,7 +157,7 @@ bool search() {
 	
 	// cover the selected column
 	cover(selected);
-
+	
 	for (it = selected->down; it != selected; it = it->down) {
 		for (jt = it->right; jt != it; jt = jt->right) {
 			cover(jt->column);
@@ -170,16 +180,41 @@ bool search() {
 }
 
 void sudoku() {
-	char num;
-	int x, y;
+	int num;
+	int x, y, i;
+
+	bool horizontal[9][9];
+	bool vertical[9][9];
+	bool boxed[3][3][9];
+
+	memset(horizontal, 0, sizeof(horizontal));
+	memset(vertical, 0, sizeof(vertical));
+	memset(boxed, 0, sizeof(boxed));
 
 	for (y = 0; y < 9; y++) {
 		for (x = 0; x < 9; x++) {
 			cin >> num;
-			num -= '0';
 
-			for (int i = 0; i < 9; i++) {
-				if (num != 0) i = num - 1;
+			if (num > 0) {
+				horizontal[x][num - 1] = true;
+				vertical[y][num - 1] = true;
+				boxed[y / 3][x / 3][num - 1] = true;
+
+				table[y][x] = num;
+			}
+		}
+	}
+
+	for (y = 0; y < 9; y++) {
+		for (x = 0; x < 9; x++) {
+			if (table[y][x] != 0) continue;
+
+			for (i = 0; i < 9; i++) {
+				if (
+					horizontal[x][i]
+					|| vertical[y][i]
+					|| boxed[y / 3][x / 3][i]
+				) continue;
 
 				// fill any number in (x, y)
 				sparseMatrix[rows][0] = 81 * 0 + (9 * y + x);
@@ -190,16 +225,14 @@ void sudoku() {
 				// fill unique number (0-9) in same column
 				sparseMatrix[rows][2] = 81 * 2 + (9 * x + i);
 
-				// fill unique number (0-9) in sub-square
+				// fill unique number (0-9) in boxed
 				sparseMatrix[rows][3] = 81 * 3 + (9 * (3 * (y / 3) + (x / 3)) + i);
 
 				points[rows].x = x;
 				points[rows].y = y;
-				points[rows].value = i + 1 + '0';
+				points[rows].value = i + 1;
 
 				rows++;
-
-				if (num != 0) break;
 			}
 		}
 	}
@@ -212,21 +245,22 @@ void sudoku() {
 
 	for (y = 0; y < 9; y++) {
 		for (x = 0; x < 9; x++) {
-			cout << table[y][x] << ' ';
+			cout << table[y][x] << " ";
 		}
-		cout << '\n';
+		cout << "\n";
 	}
 }
 
 int main() {
-	ios_base::sync_with_stdio(false);
+	ios::sync_with_stdio(false);
 	cin.tie(nullptr);
 	cout.tie(nullptr);
 
-	//auto start = chrono::steady_clock::now();
+	// auto start = chrono::steady_clock::now();
 	sudoku();
-	//auto end = chrono::steady_clock::now();
+	// auto end = chrono::steady_clock::now();
 
-	//auto diff = end - start;
-	//cout << chrono::duration<double, milli>(diff).count() << " ms\n";
+	// auto diff = end - start;
+
+	// cout << chrono::duration<double, milli>(diff).count() << " ms\n";
 }
