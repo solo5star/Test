@@ -7,13 +7,7 @@ typedef struct {
 	int cost;
 } edge;
 
-typedef struct {
-	int mid;
-	int to;
-	int cost;
-} path;
-
-bool operator<(const path& a, const path& b) {
+bool operator<(const edge& a, const edge& b) {
 	return a.cost > b.cost;
 }
 
@@ -21,34 +15,36 @@ int nodeCount;
 
 int getShortestPath(vector<vector<edge>>& nodes, vector<vector<int>>& traces, int from, int to) {
 	vector<int> costs(nodeCount, INT_MAX);
-	priority_queue<path> pq;
+	priority_queue<edge> pq;
 
+	pq.push({ from, 0 });
 	costs[from] = 0;
-	pq.push({ from, from, 0 });
 
 	while (!pq.empty()) {
-		path p = pq.top();
+		edge e = pq.top();
 		pq.pop();
 
-		if (costs[p.to] < p.cost) continue;
+		int mid = e.to;
 
-		if (costs[p.to] == p.cost) {
-			traces[p.to].push_back(p.mid);
-		}
-		else {
-			traces[p.to].clear();
-			traces[p.to].push_back(p.mid);
-		}
-
-		costs[p.to] = p.cost;
-
-		for (edge& e : nodes[p.to]) {
+		for (edge& _e : nodes[e.to]) {
 			// removed
-			if (e.to == -1) continue;
+			if (_e.to == -1) continue;
 
-			path _p = { p.to, e.to, p.cost + e.cost };
+			edge next = { _e.to, e.cost + _e.cost };
 
-			pq.push(_p);
+			if (costs[next.to] < next.cost) continue;
+
+			if (costs[next.to] == next.cost) {
+				traces[next.to].push_back(mid);
+			}
+			else {
+				traces[next.to].clear();
+				traces[next.to].push_back(mid);
+			}
+
+			costs[next.to] = next.cost;
+
+			pq.push(next);
 		}
 	}
 
