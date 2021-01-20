@@ -17,32 +17,28 @@ bool operator<(const path& a, const path& b) {
 	return a.cost > b.cost;
 }
 
-vector<edge> nodes[500];
+vector<vector<edge>> nodes(500);
 int nodeCount;
 int edgeCount;
 
-bool banned[500][500];
+int trueVal = 1;
+int banned[500][500];
 
-struct {
-	vector<int> mid;
-	int cost;
-} costs[500];
+vector<vector<int>> trace(500);
+vector<int> costs(500);
 
 bool isBetterPath(path& p) {
-	if (banned[p.mid][p.to]) return false;
+	if (banned[p.mid][p.to] == trueVal) return false;
 
-	if (costs[p.to].cost < p.cost) return false;
+	if (costs[p.to] < p.cost) return false;
 
 	return true;
 }
 
 int calculateShortestPath(int from, int to) {
-	for (int i = 0; i < nodeCount; i++) {
-		costs[i].cost = INT_MAX;
-		costs[i].mid.clear();
-	}
+	fill(costs.begin(), costs.end(), INT_MAX);
 
-	costs[from].cost = 0;
+	costs[from] = 0;
 
 	priority_queue<path> pq;
 
@@ -56,15 +52,15 @@ int calculateShortestPath(int from, int to) {
 
 		if (!isBetterPath(p)) continue;
 
-		if (costs[p.to].cost == p.cost) {
-			costs[p.to].mid.push_back(p.mid);
+		if (costs[p.to] == p.cost) {
+			trace[p.to].push_back(p.mid);
 		}
 		else {
-			costs[p.to].mid.clear();
-			costs[p.to].mid.push_back(p.mid);
+			trace[p.to].clear();
+			trace[p.to].push_back(p.mid);
 		}
 
-		costs[p.to].cost = p.cost;
+		costs[p.to] = p.cost;
 
 		for (edge& e : nodes[p.to]) {
 			path _p = { p.to, e.to, p.cost + e.cost };
@@ -75,12 +71,12 @@ int calculateShortestPath(int from, int to) {
 		}
 	}
 
-	return costs[to].cost;
+	return costs[to];
 }
 
 void _banShortestPath(int from, int to) {
-	for (int mid : costs[to].mid) {
-		banned[mid][to] = true;
+	for (int mid : trace[to]) {
+		banned[mid][to] = trueVal;
 
 		if (mid == from) continue;
 
@@ -90,19 +86,6 @@ void _banShortestPath(int from, int to) {
 
 void banShortestPath(int from, int to) {
 	_banShortestPath(from, to);
-}
-
-void clear() {
-	for (int i = 0; i < nodeCount; i++) {
-		nodes[i].clear();
-		costs[i].mid.clear();
-	}
-
-	for (int i = 0; i < nodeCount; i++) {
-		for (int j = 0; j < nodeCount; j++) {
-			banned[i][j] = false;
-		}
-	}
 }
 
 int main() {
@@ -134,6 +117,11 @@ int main() {
 
 		cout << (cost == INT_MAX ? -1 : cost) << "\n";
 
-		clear();
+		for (int i = 0; i < nodeCount; i++) {
+			nodes[i].clear();
+			trace[i].clear();
+		}
+
+		trueVal++;
 	}
 }
