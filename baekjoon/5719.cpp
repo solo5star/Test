@@ -3,6 +3,8 @@
 
 using namespace std;
 
+const int INF = (1 << 29);
+
 typedef struct { int to; int cost; } edge;
 
 bool operator<(const edge& a, const edge& b) {
@@ -12,7 +14,7 @@ bool operator<(const edge& a, const edge& b) {
 int nodeCount;
 
 int getShortestPath(vector<vector<edge>>& nodes, vector<vector<int>>& traces, int from, int to) {
-	vector<int> costs(nodeCount, INT_MAX);
+	vector<int> costs(nodeCount, INF);
 	priority_queue<edge> pq;
 
 	pq.push({ from, 0 });
@@ -104,6 +106,6 @@ int main() {
 
 		cost = getShortestPath(nodes, traces, from, to);
 
-		cout << (cost == INT_MAX ? -1 : cost) << "\n";
+		cout << (cost == INF ? -1 : cost) << "\n";
 	}
 }
