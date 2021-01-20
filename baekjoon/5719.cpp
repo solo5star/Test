@@ -37,16 +37,29 @@ int getShortestPath(vector<vector<edge>>& nodes, vector<vector<int>>& traces, in
 			if (costs[next.to] < next.cost) continue;
 
 			if (costs[next.to] == next.cost) {
+				bool exists = false;
+				for (int _mid : traces[next.to]) {
+					if (_mid == mid) {
+						exists = true;
+						break;
+					}
+				}
+
+				//if (exists) continue;
+
 				traces[next.to].push_back(mid);
 			}
 			else {
 				traces[next.to].clear();
 				traces[next.to].push_back(mid);
+
+				pq.push(next);
 			}
+
+			//cout << "UPDATE COST: " << mid << "->" << next.to << " (" << next.cost << ")\n";
 
 			costs[next.to] = next.cost;
 
-			pq.push(next);
 		}
 	}
 
@@ -61,7 +74,14 @@ void removeShortestPath(vector<vector<edge>>& nodes, vector<vector<int>>& traces
 
 	memset(visited, 0, sizeof(visited));
 
+	int maxVal = 0;
+
 	while (!q.empty()) {
+		if (q.size() > maxVal) {
+			//cout << "QUEUE MAX REACHED: " << q.size() << "\n";
+			maxVal = q.size();
+		}
+
 		int _to = q.front();
 		q.pop();
 
@@ -71,7 +91,9 @@ void removeShortestPath(vector<vector<edge>>& nodes, vector<vector<int>>& traces
 
 			// remove path
 			for (int i = 0; i < nodes[mid].size(); i++) {
-				if (nodes[mid][i].to == _to) nodes[mid][i].to = -1;
+				if (nodes[mid][i].to == _to) {
+					nodes[mid][i].to = -1;
+				}
 			}
 
 			if (mid != from) q.push(mid);
