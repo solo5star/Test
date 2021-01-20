@@ -14,7 +14,7 @@ bool operator<(const edge& a, const edge& b) {
 int nodeCount;
 
 int getShortestPath(vector<vector<edge>>& nodes, vector<vector<int>>& traces, int from, int to) {
-	vector<int> costs(nodeCount, INF);
+	vector<int> costs(nodeCount + 1, INF);
 	priority_queue<edge> pq;
 
 	pq.push({ from, 0 });
@@ -89,8 +89,8 @@ int main() {
 
 		if (nodeCount == 0 && edgeCount == 0) break;
 
-		vector<vector<edge>> nodes(nodeCount);
-		vector<vector<int>> traces(nodeCount);
+		vector<vector<edge>> nodes(nodeCount + 1);
+		vector<vector<int>> traces(nodeCount + 1);
 
 		cin >> from >> to;
 
