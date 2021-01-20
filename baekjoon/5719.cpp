@@ -17,25 +17,18 @@ bool operator<(const path& a, const path& b) {
 	return a.cost > b.cost;
 }
 
-int trueVal = 1;
-int banned[500][500];
+int nodeCount;
 
-int calculateShortestPath(vector<vector<edge>>& nodes, vector<vector<int>>& traces, int from, int to) {
-	vector<int> costs(500, INT_MAX);
-
-	costs[from] = 0;
-
+int getShortestPath(vector<vector<edge>>& nodes, vector<vector<int>>& traces, int from, int to) {
+	vector<int> costs(nodeCount, INT_MAX);
 	priority_queue<path> pq;
 
-	for (edge& e : nodes[from]) {
-		pq.push({ from, e.to, e.cost });
-	}
+	costs[from] = 0;
+	pq.push({ from, from, 0 });
 
 	while (!pq.empty()) {
 		path p = pq.top();
 		pq.pop();
-
-		if (banned[p.mid][p.to] == trueVal) continue;
 
 		if (costs[p.to] < p.cost) continue;
 
@@ -50,9 +43,10 @@ int calculateShortestPath(vector<vector<edge>>& nodes, vector<vector<int>>& trac
 		costs[p.to] = p.cost;
 
 		for (edge& e : nodes[p.to]) {
-			path _p = { p.to, e.to, p.cost + e.cost };
+			// removed
+			if (e.to == -1) continue;
 
-			if (banned[_p.mid][_p.to] == trueVal) continue;
+			path _p = { p.to, e.to, p.cost + e.cost };
 
 			pq.push(_p);
 		}
@@ -61,7 +55,7 @@ int calculateShortestPath(vector<vector<edge>>& nodes, vector<vector<int>>& trac
 	return costs[to];
 }
 
-void banShortestPath(vector<vector<int>>& traces, int from, int to) {
+void removeShortestPath(vector<vector<edge>>& nodes, vector<vector<int>>& traces, int from, int to) {
 	queue<int> midpoints;
 
 	midpoints.push(to);
@@ -71,9 +65,10 @@ void banShortestPath(vector<vector<int>>& traces, int from, int to) {
 		midpoints.pop();
 
 		for (int mid : traces[_to]) {
-			if (banned[mid][_to] == trueVal) continue;
-
-			banned[mid][_to] = trueVal;
+			// remove path
+			for (int i = 0; i < nodes[mid].size(); i++) {
+				if (nodes[mid][i].to == _to) nodes[mid][i].to = -1;
+			}
 
 			if (mid != from) midpoints.push(mid);
 		}
@@ -85,7 +80,6 @@ int main() {
 	cin.tie(nullptr);
 	cout.tie(nullptr);
 
-	int nodeCount;
 	int edgeCount;
 
 	int from, to;
@@ -107,19 +101,12 @@ int main() {
 			nodes[_from].push_back({ _to, cost });
 		}
 
-		calculateShortestPath(nodes, traces, from, to);
+		getShortestPath(nodes, traces, from, to);
 
-		banShortestPath(traces, from, to);
+		removeShortestPath(nodes, traces, from, to);
 
-		cost = calculateShortestPath(nodes, traces, from, to);
+		cost = getShortestPath(nodes, traces, from, to);
 
 		cout << (cost == INT_MAX ? -1 : cost) << "\n";
-
-		for (int i = 0; i < nodeCount; i++) {
-			nodes[i].clear();
-			traces[i].clear();
-		}
-
-		trueVal++;
 	}
 }
