@@ -28,8 +28,6 @@ struct {
 	int cost;
 } costs[500];
 
-priority_queue<path> pq;
-
 bool isBetterPath(path& p) {
 	if (banned[p.mid][p.to]) return false;
 
@@ -45,6 +43,8 @@ int calculateShortestPath(int from, int to) {
 	}
 
 	costs[from].cost = 0;
+
+	priority_queue<path> pq;
 
 	for (edge& e : nodes[from]) {
 		pq.push({ from, e.to, e.cost });
@@ -98,7 +98,11 @@ void clear() {
 		costs[i].mid.clear();
 	}
 
-	memset(banned, 0, sizeof(banned));
+	for (int i = 0; i < nodeCount; i++) {
+		for (int j = 0; j < nodeCount; j++) {
+			banned[i][j] = false;
+		}
+	}
 }
 
 int main() {
