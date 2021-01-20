@@ -91,13 +91,18 @@ int main() {
 	int from, to;
 	int _from, _to, cost;
 
+	vector<vector<edge>> nodes;
+	vector<vector<int>> traces;
+
 	while (true) {
 		cin >> nodeCount >> edgeCount;
 
 		if (nodeCount == 0 && edgeCount == 0) break;
 
-		vector<vector<edge>> nodes(nodeCount + 1);
-		vector<vector<int>> traces(nodeCount + 1);
+		nodes.clear();
+		traces.clear();
+		nodes.resize(nodeCount + 1);
+		traces.resize(nodeCount + 1);
 
 		cin >> from >> to;
 
