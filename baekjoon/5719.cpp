@@ -21,12 +21,12 @@ vector<edge> nodes[500];
 int nodeCount;
 int edgeCount;
 
-bool banned[501][501];
+bool banned[500][500];
 
 struct {
 	vector<int> mid;
 	int cost;
-} costs[501];
+} costs[500];
 
 priority_queue<path> pq;
 
@@ -48,11 +48,16 @@ int calculateShortestPath(int from, int to) {
 
 		if (banned[p.mid][p.to]) continue;
 
-		if (costs[p.to].cost < p.cost) continue;
-
-		else if (costs[p.to].cost == p.cost) costs[p.to].mid.push_back(p.mid);
-
-		else costs[p.to].mid = { p.mid };
+		if (costs[p.to].cost < p.cost) {
+			continue;
+		}
+		else if (costs[p.to].cost == p.cost) {
+			costs[p.to].mid.push_back(p.mid);
+		}
+		else {
+			costs[p.to].mid.clear();
+			costs[p.to].mid.push_back(p.mid);
+		}
 
 		costs[p.to].cost = p.cost;
 
@@ -81,6 +86,7 @@ void banShortestPath(int from, int to) {
 void clear() {
 	for (int i = 0; i < nodeCount; i++) {
 		nodes[i].clear();
+		costs[i].mid.clear();
 	}
 
 	memset(banned, 0, sizeof(banned));
