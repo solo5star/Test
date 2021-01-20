@@ -75,12 +75,19 @@ int calculateShortestPath(int from, int to) {
 }
 
 void _banShortestPath(int from, int to) {
-	for (int mid : trace[to]) {
-		banned[mid][to] = trueVal;
+	queue<int> midpoints;
 
-		if (mid == from) continue;
+	midpoints.push(to);
 
-		_banShortestPath(from, mid);
+	while (!midpoints.empty()) {
+		int _to = midpoints.front();
+		midpoints.pop();
+
+		for (int mid : trace[_to]) {
+			banned[mid][_to] = trueVal;
+
+			if (mid != from) midpoints.push(mid);
+		}
 	}
 }
 
