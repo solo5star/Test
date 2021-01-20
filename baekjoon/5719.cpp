@@ -84,6 +84,8 @@ void _banShortestPath(int from, int to) {
 		midpoints.pop();
 
 		for (int mid : trace[_to]) {
+			if (banned[mid][_to] == trueVal) continue;
+
 			banned[mid][_to] = trueVal;
 
 			if (mid != from) midpoints.push(mid);
