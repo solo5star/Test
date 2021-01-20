@@ -3,10 +3,7 @@
 
 using namespace std;
 
-typedef struct {
-	int to;
-	int cost;
-} edge;
+typedef struct { int to; int cost; } edge;
 
 bool operator<(const edge& a, const edge& b) {
 	return a.cost > b.cost;
@@ -26,6 +23,8 @@ int getShortestPath(vector<vector<edge>>& nodes, vector<vector<int>>& traces, in
 		pq.pop();
 
 		int mid = e.to;
+
+		if (costs[mid] != e.cost) continue;
 
 		for (edge& _e : nodes[mid]) {
 			// removed
