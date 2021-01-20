@@ -53,15 +53,22 @@ int getShortestPath(vector<vector<edge>>& nodes, vector<vector<int>>& traces, in
 	return costs[to];
 }
 
+bool visited[500][500] = { 0, };
+
 void removeShortestPath(vector<vector<edge>>& nodes, vector<vector<int>>& traces, int from, int to) {
 	queue<int> q;
 	q.push(to);
+
+	memset(visited, 0, sizeof(visited));
 
 	while (!q.empty()) {
 		int _to = q.front();
 		q.pop();
 
 		for (int mid : traces[_to]) {
+			if (visited[mid][_to]) continue;
+			visited[mid][_to] = true;
+
 			// remove path
 			for (int i = 0; i < nodes[mid].size(); i++) {
 				if (nodes[mid][i].to == _to) nodes[mid][i].to = -1;
