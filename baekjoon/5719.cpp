@@ -30,6 +30,14 @@ struct {
 
 priority_queue<path> pq;
 
+bool isBetterPath(path& p) {
+	if (banned[p.mid][p.to]) return false;
+
+	if (costs[p.to].cost < p.cost) return false;
+
+	return true;
+}
+
 int calculateShortestPath(int from, int to) {
 	for (int i = 0; i < nodeCount; i++) {
 		costs[i].cost = INT_MAX;
@@ -46,12 +54,9 @@ int calculateShortestPath(int from, int to) {
 		path p = pq.top();
 		pq.pop();
 
-		if (banned[p.mid][p.to]) continue;
+		if (!isBetterPath(p)) continue;
 
-		if (costs[p.to].cost < p.cost) {
-			continue;
-		}
-		else if (costs[p.to].cost == p.cost) {
+		if (costs[p.to].cost == p.cost) {
 			costs[p.to].mid.push_back(p.mid);
 		}
 		else {
@@ -62,7 +67,11 @@ int calculateShortestPath(int from, int to) {
 		costs[p.to].cost = p.cost;
 
 		for (edge& e : nodes[p.to]) {
-			pq.push({ p.to, e.to, p.cost + e.cost });
+			path _p = { p.to, e.to, p.cost + e.cost };
+
+			if (!isBetterPath(_p)) continue;
+
+			pq.push(_p);
 		}
 	}
 
