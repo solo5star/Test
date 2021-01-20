@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -26,7 +27,7 @@ int getShortestPath(vector<vector<edge>>& nodes, vector<vector<int>>& traces, in
 
 		int mid = e.to;
 
-		for (edge& _e : nodes[e.to]) {
+		for (edge& _e : nodes[mid]) {
 			// removed
 			if (_e.to == -1) continue;
 
@@ -52,13 +53,12 @@ int getShortestPath(vector<vector<edge>>& nodes, vector<vector<int>>& traces, in
 }
 
 void removeShortestPath(vector<vector<edge>>& nodes, vector<vector<int>>& traces, int from, int to) {
-	queue<int> midpoints;
+	queue<int> q;
+	q.push(to);
 
-	midpoints.push(to);
-
-	while (!midpoints.empty()) {
-		int _to = midpoints.front();
-		midpoints.pop();
+	while (!q.empty()) {
+		int _to = q.front();
+		q.pop();
 
 		for (int mid : traces[_to]) {
 			// remove path
@@ -66,7 +66,7 @@ void removeShortestPath(vector<vector<edge>>& nodes, vector<vector<int>>& traces
 				if (nodes[mid][i].to == _to) nodes[mid][i].to = -1;
 			}
 
-			if (mid != from) midpoints.push(mid);
+			if (mid != from) q.push(mid);
 		}
 	}
 }
@@ -75,6 +75,8 @@ int main() {
 	ios_base::sync_with_stdio(false);
 	cin.tie(nullptr);
 	cout.tie(nullptr);
+
+	//freopen("1.in", "r", stdin);
 
 	int edgeCount;
 
