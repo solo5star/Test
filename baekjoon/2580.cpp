@@ -8,6 +8,18 @@ using namespace std;
 //
 // Sudoku solve algorithm
 
+#ifdef DEBUG
+#include <chrono>
+#endif
+
+#define BASE 3
+#define CHAR_OFFSET '1'
+#define CHAR_EMPTY '0'
+#define SPACE true
+
+const int BASE_2 = BASE * BASE;
+const int BASE_4 = BASE_2 * BASE_2;
+
 typedef struct node {
 	int row;
 	int size;
@@ -27,12 +39,12 @@ typedef struct {
 } point;
 
 node* head;
-node* columns[324];
-int columnCount = 324;
+node* columns[BASE_4 * 4];
+int columnCount = BASE_4 * 4;
 
-int sparseMatrix[729][4];
+int sparseMatrix[BASE_4 * BASE_2][4];
 int rows;
-point points[729];
+point points[BASE_4 * BASE_2];
 
 void init() {
 	// initialize columns
@@ -56,13 +68,10 @@ void init() {
 	head->right->left = head;
 	head->left->right = head;
 
-	node* previous;
-	node* current;
-
 	// make dancing links
 	for (int row = 0; row < rows; row++) {
-		previous = nullptr;
-		current = nullptr;
+		node* previous = nullptr;
+		node* current = nullptr;
 
 		for (int col : sparseMatrix[row]) {
 			current = new node;
@@ -93,12 +102,22 @@ void init() {
 	}
 
 	// filter 0 sized column
+	int columns = 0;
+	vector<int> singleSized;
 	for (node* it = head->right; it != head; it = it->right) {
 		if (it->size == 0) {
 			it->left->right = it->right;
 			it->right->left = it->left;
 		}
+		else {
+			columns++;
+		}
 	}
+
+#ifdef DEBUG
+	cout << "ROWS=" << rows << "\n";
+	cout << "COLUMNS=" << columns << "\n";
+#endif
 }
 
 void cover(node* column) {
@@ -125,7 +144,11 @@ void uncover(node* column) {
 	column->right->left = column;
 }
 
-int table[9][9];
+char table[BASE_2][BASE_2];
+
+bool horizontal[BASE_2][BASE_2];
+bool vertical[BASE_2][BASE_2];
+bool boxed[BASE][BASE][BASE_2];
 
 bool search() {
 	if (head->right == head) return true;
@@ -134,14 +157,9 @@ bool search() {
 	node* selected = head->right;
 	int lowest = selected->size;
 	for (node* it = selected; it != head; it = it->right) {
-		if (it->size == 1) {
-			selected = it;
-			break;
-		}
+		if (it->size == 0) return false;
 
 		if (it->size < lowest) {
-			if (it->size == 0) return false;
-
 			lowest = it->size;
 			selected = it;
 		}
@@ -151,6 +169,10 @@ bool search() {
 	cover(selected);
 
 	for (node* it = selected->down; it != selected; it = it->down) {
+		int x = points[it->row].x;
+		int y = points[it->row].y;
+		int value = points[it->row].value;
+
 		for (node* jt = it->right; jt != it; jt = jt->right) {
 			cover(jt->column);
 		}
@@ -160,7 +182,7 @@ bool search() {
 			return true;
 		}
 
-		for (node* jt = it->right; jt != it; jt = jt->right) {
+		for (node* jt = it->left; jt != it; jt = jt->left) {
 			uncover(jt->column);
 		}
 	}
@@ -171,52 +193,52 @@ bool search() {
 	return false;
 }
 
-bool horizontal[9][9];
-bool vertical[9][9];
-bool boxed[3][3][9];
-
 void sudoku() {
-	int num;
-	int x, y, i;
+	char ch;
+	const char EMPTY = -1;
 
-	for (y = 0; y < 9; y++) {
-		for (x = 0; x < 9; x++) {
-			cin >> num;
-
-			if (num > 0) {
-				horizontal[x][num - 1] = true;
-				vertical[y][num - 1] = true;
-				boxed[y / 3][x / 3][num - 1] = true;
-
-				table[y][x] = num;
+	for (int y = 0; y < BASE_2; y++) {
+		for (int x = 0; x < BASE_2; x++) {
+			cin >> ch;
+			if (ch == CHAR_EMPTY) {
+				table[y][x] = EMPTY;
+				continue;
 			}
+
+			int num = ch - CHAR_OFFSET;
+
+			horizontal[x][num] = true;
+			vertical[y][num] = true;
+			boxed[y / BASE][x / BASE][num] = true;
+
+			table[y][x] = num;
 		}
 	}
 
-	for (y = 0; y < 9; y++) {
-		for (x = 0; x < 9; x++) {
-			if (table[y][x] != 0) continue;
+	for (int y = 0; y < BASE_2; y++) {
+		for (int x = 0; x < BASE_2; x++) {
+			if (table[y][x] != EMPTY) continue;
 
-			for (i = 0; i < 9; i++) {
+			for (int i = 0; i < BASE_2; i++) {
 				if (
 					horizontal[x][i]
 					|| vertical[y][i]
-					|| boxed[y / 3][x / 3][i]
+					|| boxed[y / BASE][x / BASE][i]
 				) continue;
 
 				// fill any number in (x, y)
-				sparseMatrix[rows][0] = 81 * 0 + (9 * y + x);
+				sparseMatrix[rows][0] = BASE_4 * 0 + (BASE_2 * y + x);
 
 				// fill unique number (0-9) in same row
-				sparseMatrix[rows][1] = 81 * 1 + (9 * y + i);
+				sparseMatrix[rows][1] = BASE_4 * 1 + (BASE_2 * y + i);
 
 				// fill unique number (0-9) in same column
-				sparseMatrix[rows][2] = 81 * 2 + (9 * x + i);
+				sparseMatrix[rows][2] = BASE_4 * 2 + (BASE_2 * x + i);
 
 				// fill unique number (0-9) in boxed
-				sparseMatrix[rows][3] = 81 * 3 + (9 * (3 * (y / 3) + (x / 3)) + i);
+				sparseMatrix[rows][3] = BASE_4 * 3 + (BASE_2 * (BASE * (y / BASE) + (x / BASE)) + i);
 
-				points[rows] = { x, y, i + 1 };
+				points[rows] = { x, y, i };
 
 				rows++;
 			}
@@ -227,9 +249,14 @@ void sudoku() {
 
 	search();
 
-	for (y = 0; y < 9; y++) {
-		for (x = 0; x < 9; x++) {
-			cout << table[y][x] << " ";
+	char out;
+	for (int y = 0; y < BASE_2; y++) {
+		for (int x = 0; x < BASE_2; x++) {
+			out = table[y][x] + CHAR_OFFSET;
+
+			cout << out;
+
+			if (SPACE) cout << " ";
 		}
 		cout << "\n";
 	}
@@ -240,7 +267,14 @@ int main() {
 	cin.tie(nullptr);
 	cout.tie(nullptr);
 
-	//auto start = chrono::steady_clock::now();
+#ifdef DEBUG
+	auto start = chrono::steady_clock::now();
+#endif
+	//freopen("1.in", "r", stdin);
+
 	sudoku();
-	//cout << chrono::duration<double, milli>(chrono::steady_clock::now() - start).count() << " ms\n";
+
+#ifdef DEBUG
+	cout << chrono::duration<double, milli>(chrono::steady_clock::now() - start).count() << " ms\n";
+#endif
 }
