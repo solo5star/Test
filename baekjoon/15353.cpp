@@ -31,7 +31,7 @@ void big_int_constructor(big_int& result, const string& str) {
 	}
 }
 
-void add(big_int& result, const big_int& a, const big_int& b) {
+void big_int_add(big_int& result, const big_int& a, const big_int& b) {
 	data_t part, overflow = 0;
 	for (int i = 0; i < 1000; i++) {
 		part = a.num[i] + b.num[i];
@@ -43,15 +43,18 @@ void add(big_int& result, const big_int& a, const big_int& b) {
 	}
 }
 
-void print(big_int& result) {
+void big_int_print(big_int& result) {
 	int i = 999;
-	while (result.num[i] == 0) i--;
+	while (i >= 0 && result.num[i] == 0) i--;
+
+	if (i == -1) cout << "0";
 
 	while (i >= 0) {
 		cout << result.num[i--];
 	}
 }
 
+string a_str, b_str;
 big_int a, b, result;
 
 int main() {
@@ -59,12 +62,11 @@ int main() {
 	cin.tie(nullptr);
 	cout.tie(nullptr);
 
-	string a_str, b_str;
 	cin >> a_str >> b_str;
 
 	big_int_constructor(a, a_str);
 	big_int_constructor(b, b_str);
 
-	add(result, a, b);
-	print(result);
+	big_int_add(result, a, b);
+	big_int_print(result);
 }
