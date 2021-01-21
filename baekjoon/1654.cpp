@@ -6,7 +6,7 @@ using namespace std;
 
 typedef long long data_t;
 
-const data_t MAX = (1 << 31);
+const data_t MAX = ((data_t)1 << 31);
 
 int cables[10000];
 int cableCount;
@@ -34,12 +34,12 @@ void parametricSearch(data_t left = 1, data_t right = MAX) {
 	if (current >= goal) {
 		maxLength = max(maxLength, length);
 
-		if (left == right) return;
+		if (left >= right) return;
 
 		parametricSearch(length + 1, right);
 	}
 	else {
-		if (left == right) return;
+		if (left >= right) return;
 
 		parametricSearch(left, length);
 	}
