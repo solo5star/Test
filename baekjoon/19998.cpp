@@ -1,9 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 
-#include <iostream>
-#include <cstring>
-#include <vector>
-#include <chrono>
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -105,12 +102,10 @@ void init() {
 }
 
 void cover(node* column) {
-	node* it;
-	node* jt;
 	column->left->right = column->right;
 	column->right->left = column->left;
-	for (it = column->down; it != column; it = it->down) {
-		for (jt = it->right; jt != it; jt = jt->right) {
+	for (node* it = column->down; it != column; it = it->down) {
+		for (node* jt = it->right; jt != it; jt = jt->right) {
 			jt->up->down = jt->down;
 			jt->down->up = jt->up;
 			jt->column->size--;
@@ -119,10 +114,8 @@ void cover(node* column) {
 }
 
 void uncover(node* column) {
-	node* it;
-	node* jt;
-	for (it = column->down; it != column; it = it->down) {
-		for (jt = it->right; jt != it; jt = jt->right) {
+	for (node* it = column->down; it != column; it = it->down) {
+		for (node* jt = it->right; jt != it; jt = jt->right) {
 			jt->up->down = jt;
 			jt->down->up = jt;
 			jt->column->size++;
@@ -137,12 +130,10 @@ int table[9][9];
 bool search() {
 	if (head->right == head) return true;
 
-	node* it;
-	node* jt;
 	// select a column which has lowest size
 	node* selected = head->right;
 	int lowest = selected->size;
-	for (it = selected; it != head; it = it->right) {
+	for (node* it = selected; it != head; it = it->right) {
 		if (it->size == 1) {
 			selected = it;
 			break;
@@ -155,12 +146,12 @@ bool search() {
 			selected = it;
 		}
 	}
-	
+
 	// cover the selected column
 	cover(selected);
-	
-	for (it = selected->down; it != selected; it = it->down) {
-		for (jt = it->right; jt != it; jt = jt->right) {
+
+	for (node* it = selected->down; it != selected; it = it->down) {
+		for (node* jt = it->right; jt != it; jt = jt->right) {
 			cover(jt->column);
 		}
 
@@ -169,7 +160,7 @@ bool search() {
 			return true;
 		}
 
-		for (jt = it->right; jt != it; jt = jt->right) {
+		for (node* jt = it->right; jt != it; jt = jt->right) {
 			uncover(jt->column);
 		}
 	}
@@ -187,10 +178,6 @@ bool boxed[3][3][9];
 void sudoku() {
 	int num;
 	int x, y, i;
-
-	//memset(horizontal, 0, sizeof(horizontal));
-	//memset(vertical, 0, sizeof(vertical));
-	//memset(boxed, 0, sizeof(boxed));
 
 	for (y = 0; y < 9; y++) {
 		for (x = 0; x < 9; x++) {
@@ -255,6 +242,5 @@ int main() {
 
 	//auto start = chrono::steady_clock::now();
 	sudoku();
-
 	//cout << chrono::duration<double, milli>(chrono::steady_clock::now() - start).count() << " ms\n";
 }
