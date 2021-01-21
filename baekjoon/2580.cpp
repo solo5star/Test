@@ -1,9 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 
-#include <iostream>
-#include <cstring>
-#include <vector>
-#include <chrono>
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -23,20 +20,21 @@ typedef struct node {
 	node* left;
 } node;
 
-node* head;
-
 typedef struct {
 	int x;
 	int y;
 	int value;
 } point;
 
-vector<vector<int>> sparseMatrix;
-vector<point> points;
+node* head;
+node* columns[324];
+int columnCount = 324;
 
-void init(int columnCount) {
-	node** columns = new node*[columnCount];
+int sparseMatrix[729][4];
+int rows;
+point points[729];
 
+void init() {
 	// initialize columns
 	// link each columns
 	for (int i = 0; i < columnCount; i++) {
@@ -61,11 +59,10 @@ void init(int columnCount) {
 	node* previous;
 	node* current;
 
-	int rows = sparseMatrix.size();
 	// make dancing links
 	for (int row = 0; row < rows; row++) {
-		previous = NULL;
-		current = NULL;
+		previous = nullptr;
+		current = nullptr;
 
 		for (int col : sparseMatrix[row]) {
 			current = new node;
@@ -82,7 +79,7 @@ void init(int columnCount) {
 			columns[col]->up = current;
 
 			// link with left and right
-			if (previous == NULL) {
+			if (previous == nullptr) {
 				previous = current;
 				previous->right = current;
 			}
@@ -105,12 +102,10 @@ void init(int columnCount) {
 }
 
 void cover(node* column) {
-	node* it;
-	node* jt;
 	column->left->right = column->right;
 	column->right->left = column->left;
-	for (it = column->down; it != column; it = it->down) {
-		for (jt = it->right; jt != it; jt = jt->right) {
+	for (node* it = column->down; it != column; it = it->down) {
+		for (node* jt = it->right; jt != it; jt = jt->right) {
 			jt->up->down = jt->down;
 			jt->down->up = jt->up;
 			jt->column->size--;
@@ -119,10 +114,8 @@ void cover(node* column) {
 }
 
 void uncover(node* column) {
-	node* it;
-	node* jt;
-	for (it = column->down; it != column; it = it->down) {
-		for (jt = it->right; jt != it; jt = jt->right) {
+	for (node* it = column->down; it != column; it = it->down) {
+		for (node* jt = it->right; jt != it; jt = jt->right) {
 			jt->up->down = jt;
 			jt->down->up = jt;
 			jt->column->size++;
@@ -137,28 +130,28 @@ int table[9][9];
 bool search() {
 	if (head->right == head) return true;
 
-	node* it;
-	node* jt;
 	// select a column which has lowest size
 	node* selected = head->right;
 	int lowest = selected->size;
-	for (it = selected; it != head; it = it->right) {
+	for (node* it = selected; it != head; it = it->right) {
 		if (it->size == 1) {
 			selected = it;
 			break;
 		}
 
 		if (it->size < lowest) {
+			if (it->size == 0) return false;
+
 			lowest = it->size;
 			selected = it;
 		}
 	}
-	
+
 	// cover the selected column
 	cover(selected);
-	
-	for (it = selected->down; it != selected; it = it->down) {
-		for (jt = it->right; jt != it; jt = jt->right) {
+
+	for (node* it = selected->down; it != selected; it = it->down) {
+		for (node* jt = it->right; jt != it; jt = jt->right) {
 			cover(jt->column);
 		}
 
@@ -167,7 +160,7 @@ bool search() {
 			return true;
 		}
 
-		for (jt = it->right; jt != it; jt = jt->right) {
+		for (node* jt = it->right; jt != it; jt = jt->right) {
 			uncover(jt->column);
 		}
 	}
@@ -178,17 +171,13 @@ bool search() {
 	return false;
 }
 
+bool horizontal[9][9];
+bool vertical[9][9];
+bool boxed[3][3][9];
+
 void sudoku() {
 	int num;
 	int x, y, i;
-
-	bool horizontal[9][9];
-	bool vertical[9][9];
-	bool boxed[3][3][9];
-
-	memset(horizontal, 0, sizeof(horizontal));
-	memset(vertical, 0, sizeof(vertical));
-	memset(boxed, 0, sizeof(boxed));
 
 	for (y = 0; y < 9; y++) {
 		for (x = 0; x < 9; x++) {
@@ -215,26 +204,26 @@ void sudoku() {
 					|| boxed[y / 3][x / 3][i]
 				) continue;
 
-				sparseMatrix.push_back({
-					// fill any number in (x, y)
-					81 * 0 + (9 * y + x),
+				// fill any number in (x, y)
+				sparseMatrix[rows][0] = 81 * 0 + (9 * y + x);
 
-					// fill unique number (0-9) in same row
-					81 * 1 + (9 * y + i),
+				// fill unique number (0-9) in same row
+				sparseMatrix[rows][1] = 81 * 1 + (9 * y + i);
 
-					// fill unique number (0-9) in same column
-					81 * 2 + (9 * x + i),
+				// fill unique number (0-9) in same column
+				sparseMatrix[rows][2] = 81 * 2 + (9 * x + i);
 
-					// fill unique number (0-9) in boxed
-					81 * 3 + (9 * (3 * (y / 3) + (x / 3)) + i)
-				});
+				// fill unique number (0-9) in boxed
+				sparseMatrix[rows][3] = 81 * 3 + (9 * (3 * (y / 3) + (x / 3)) + i);
 
-				points.push_back({ x, y, i + 1 });
+				points[rows] = { x, y, i + 1 };
+
+				rows++;
 			}
 		}
 	}
 
-	init(324);
+	init();
 
 	search();
 
@@ -253,9 +242,5 @@ int main() {
 
 	//auto start = chrono::steady_clock::now();
 	sudoku();
-	//auto end = chrono::steady_clock::now();
-
-	//auto diff = end - start;
-
-	//cout << chrono::duration<double, milli>(diff).count() << " ms\n";
+	//cout << chrono::duration<double, milli>(chrono::steady_clock::now() - start).count() << " ms\n";
 }
