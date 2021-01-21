@@ -6,6 +6,8 @@ using namespace std;
 
 typedef long long data_t;
 
+const data_t MAX = (1 << 31);
+
 int cables[10000];
 int cableCount;
 int goal;
@@ -20,7 +22,7 @@ int getCurrentCount(int length) {
 
 data_t maxLength = 0;
 
-void parametricSearch(data_t left = 1, data_t right = 1000000) {
+void parametricSearch(data_t left = 1, data_t right = MAX) {
 	data_t length = (left + right) / 2;
 
 	data_t current = getCurrentCount(length);
