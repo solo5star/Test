@@ -4,7 +4,7 @@
 
 using namespace std;
 
-typedef int data_t;
+typedef long long data_t;
 
 data_t tree[262144];
 int arr[100000];
