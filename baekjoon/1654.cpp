@@ -34,12 +34,12 @@ void parametricSearch(data_t left = 1, data_t right = MAX) {
 	if (current >= goal) {
 		maxLength = max(maxLength, length);
 
-		if (left >= right) return;
+		if (left == right) return;
 
 		parametricSearch(length + 1, right);
 	}
 	else {
-		if (left >= right) return;
+		if (left == right) return;
 
 		parametricSearch(left, length);
 	}
