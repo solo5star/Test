@@ -4,6 +4,8 @@
 
 using namespace std;
 
+typedef long long data_t;
+
 int cables[10000];
 int cableCount;
 int goal;
@@ -16,12 +18,12 @@ int getCurrentCount(int length) {
 	return result;
 }
 
-int maxLength = 0;
+data_t maxLength = 0;
 
-void parametricSearch(int left = 0, int right = 1000000) {
-	int length = (left + right) / 2;
+void parametricSearch(data_t left = 1, data_t right = 1000000) {
+	data_t length = (left + right) / 2;
 
-	int current = getCurrentCount(length);
+	data_t current = getCurrentCount(length);
 
 #ifdef DEBUG
 	cout << "CHECK left=" << left << ", right=" << right << ", length=" << length << ", " << "current=" << current << "\n";
