@@ -13,7 +13,7 @@ int length;
 void _update(int node, int left, int right, int start, int end, data_t value) {
 	if (right < start || end < left) return;
 
-	if (left <= start && end <= right) {
+	if (start <= left && right <= end) {
 		tree[node] ^= value;
 		return;
 	}
@@ -46,6 +46,8 @@ int main() {
 	ios::sync_with_stdio(false);
 	cin.tie(nullptr);
 	cout.tie(nullptr);
+
+	//freopen("1.in", "r", stdin);
 
 	cin >> length;
 
