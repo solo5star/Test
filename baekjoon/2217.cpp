@@ -26,9 +26,6 @@ int main() {
 		if (z > best) {
 			best = z;
 		}
-		else {
-			break;
-		}
 	}
 
 	cout << best;
