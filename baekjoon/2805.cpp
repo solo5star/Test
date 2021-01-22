@@ -12,7 +12,9 @@ data_t treeCount;
 data_t getRemain(data_t length) {
 	data_t remain = 0;
 	for (int i = 0; i < treeCount; i++) {
-		remain += max((data_t)0, tree[i] - length);
+		if (tree[i] > length) {
+			remain += tree[i] - length;
+		}
 	}
 	return remain;
 }
@@ -20,7 +22,7 @@ data_t getRemain(data_t length) {
 data_t parametricSearch(data_t goal) {
 	data_t left = 0, right = 2000000000;
 
-	data_t maxLength;
+	data_t maxLength = 0;
 
 	while (left < right) {
 		data_t mid = (left + right) / 2;
