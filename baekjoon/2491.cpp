@@ -16,8 +16,6 @@ int main() {
 	cin >> n;
 
 	cin >> prev;
-	increase[0] = 1;
-	decrease[0] = 1;
 
 	int maxValue = 0;
 
@@ -25,10 +23,10 @@ int main() {
 		cin >> num;
 
 		if (prev <= num) maxValue = max(maxValue, increase[i] = increase[i - 1] + 1);
-		else maxValue = max(maxValue, decrease[i] = decrease[i - 1] + 1);
+		if (prev >= num) maxValue = max(maxValue, decrease[i] = decrease[i - 1] + 1);
 
 		prev = num;
 	}
 
-	cout << maxValue;
+	cout << maxValue + 1;
 }
