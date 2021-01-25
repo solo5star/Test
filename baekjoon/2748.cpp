@@ -1,28 +1,27 @@
 #define _CRT_SECURE_NO_WARNINGS
 
-#include <iostream>
-#include <utility>
-#include <algorithm>
-#include <math.h>
-#include <unordered_map>
-#include <string>
-#include <math.h>
+#include <bits/stdc++.h>
 
 using namespace std;
 
-long long dp[91] = { 0, 1 };
+typedef unsigned long long data_t;
+
+data_t dp[91] = { 0, 1, 1, 2 };
+
+data_t fib(data_t n) {
+	if (n == 0) return 0;
+	if (dp[n]) return dp[n];
+
+	return dp[n] = fib(n - 1) + fib(n - 2);
+}
 
 int main() {
-	ios_base::sync_with_stdio(false);
-	cin.tie(NULL);
-	cout.tie(NULL);
+	ios::sync_with_stdio(false);
+	cin.tie(nullptr);
+	cout.tie(nullptr);
 
-	int n;
+	data_t n;
 	cin >> n;
 
-	for (int i = 2; i <= n; i++) {
-		dp[i] = dp[i - 1] + dp[i - 2];
-	}
-
-	cout << dp[n];
+	cout << fib(n);
 }
