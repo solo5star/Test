@@ -25,7 +25,7 @@ void tree(int left, int right, int rightOffset = 0) {
 	//cout << "SEARCH: " << left << "~" << mid - 1 << " AND " << mid << "~" << right - 1 << "\n";
 
 	// left subtree
-	tree(left, mid - 1);
+	tree(left, mid - 1, rightOffset);
 
 	// right subtree
 	tree(mid, right - 1, rightOffset + 1);
