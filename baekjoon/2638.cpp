@@ -21,15 +21,6 @@ int cheeseCount;
 
 queue<point> airs;
 
-bool hasCheeseBlockNearby(int x, int y) {
-	return (
-		(x > 0 && board[y][x - 1] == CHEESE)
-		|| (x < width - 1 && board[y][x + 1] == CHEESE)
-		|| (y > 0 && board[y - 1][x] == CHEESE)
-		|| (y < height - 1 && board[y + 1][x] == CHEESE)
-	);
-}
-
 void floodfillSafeAirToAir(int x, int y) {
 	queue<point> q;
 
