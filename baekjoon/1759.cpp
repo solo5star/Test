@@ -8,17 +8,20 @@ vector<char> alphabets;
 vector<char> combination;
 int combinationLength;
 
-void dfs(int index = 0, bool containsVowel = false) {
+void dfs(int index = 0, int vowels = 0, int consonants = 0) {
 	combination.push_back(alphabets[index]);
 
-	containsVowel |= alphabets[index] == 'a'
+	bool isVowel = alphabets[index] == 'a'
 					|| alphabets[index] == 'e'
 					|| alphabets[index] == 'i'
 					|| alphabets[index] == 'o'
 					|| alphabets[index] == 'u';
 
+	vowels += isVowel;
+	consonants += !isVowel;
+
 	if (combination.size() == combinationLength) {
-		if (containsVowel) {
+		if (vowels >= 1 && consonants >= 2) {
 			for (auto& ch : combination) {
 				cout << ch;
 			}
@@ -29,7 +32,7 @@ void dfs(int index = 0, bool containsVowel = false) {
 	}
 
 	for (int i = index + 1; i < alphabets.size(); i++) {
-		dfs(i, containsVowel);
+		dfs(i, vowels, consonants);
 	}
 
 	combination.pop_back();
