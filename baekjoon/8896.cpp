@@ -8,11 +8,11 @@ using namespace std;
 string rsp[10];
 int robots;
 int _round;
-unordered_set<int> winners;
+unordered_set<int> losers;
 
 void lose(char ch) {
-	for (int i = 0; i < robots; i++) {
-		if (rsp[i][_round] == ch) winners.erase(i);
+	for (int robot = 0; robot < robots; robot++) {
+		if (rsp[robot][_round] == ch) losers.insert(robot);
 	}
 }
 
@@ -27,43 +27,50 @@ int main() {
 		bool roundsFinished = false;
 		cin >> robots;
 
+		losers.clear();
+
 		for (int i = 0; i < robots; i++) {
 			cin >> rsp[i];
-			winners.insert(i);
 		}
 
 		int rounds = rsp[0].length();
 		for (_round = 0; _round < rounds; _round++) {
-			bool r = false, s = false, p = false;
+			bool R = false, S = false, P = false;
 
-			for (int robot : winners) {
+			for (int robot = 0; robot < robots; robot++) {
+				if (losers.count(robot)) continue;
+
 				switch (rsp[robot][_round]) {
-				case 'R': r = true; break;
-				case 'S': s = true; break;
-				case 'P': p = true; break;
+				case 'R': R = true; break;
+				case 'S': S = true; break;
+				case 'P': P = true; break;
 				}
 			}
 
-			if (r && s && p) continue;
+			// DRAW
+			if (R && S && P) continue;
 
-			if (r && s) lose('S');
-			else if (r && p) lose('R');
-			else if (p && s) lose('P');
+			else if (R && S) lose('S');
+			else if (R && P) lose('R');
+			else if (P && S) lose('P');
 
-			if (winners.size() == 1) {
-				for (auto& winner : winners) {
-					cout << winner + 1 << "\n";
+			// DRAW
+			else continue;
+
+			if (losers.size() == robots - 1) {
+				for (int robot = 0; robot < robots; robot++) {
+					if (losers.count(robot)) continue;
+
+					cout << robot + 1 << "\n";
 					break;
 				}
+
 				// finish the game
 				roundsFinished = true;
 				break;
 			}
 		}
 
-		if (roundsFinished) continue;
-		else cout << 0 << "\n";
-
-		winners.clear();
+		if (!roundsFinished) cout << 0 << "\n";
 	}
 }
