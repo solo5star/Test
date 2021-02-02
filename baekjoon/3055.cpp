@@ -47,7 +47,7 @@ void flood() {
 int findRoutes(point source) {
 	queue<point> q;
 
-	source.time = 0;
+	source.time = 1;
 	q.push(source);
 
 	while (!q.empty()) {
@@ -61,10 +61,10 @@ int findRoutes(point source) {
 		if (board[current.y][current.x] == STONE) continue;
 
 		// check is goal
-		if (board[current.y][current.x] == DEST) return current.time;
+		if (board[current.y][current.x] == DEST) return current.time - 1;
 
 		// check current tile is flooded
-		if (board[current.y][current.x] >= 0 && current.time + 1 >= board[current.y][current.x]) continue;
+		if (board[current.y][current.x] > 0 && current.time >= board[current.y][current.x]) continue;
 
 		// use STONE instead of visited flag
 		board[current.y][current.x] = STONE;
