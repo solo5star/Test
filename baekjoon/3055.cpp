@@ -69,6 +69,9 @@ int findRoutes(point source) {
 		// check if flooded
 		if (board[current.y][current.x] >= 0 && elapsedTime + 1 >= board[current.y][current.x]) continue;
 
+		// use STONE instead of visited flag
+		board[current.y][current.x] = STONE;
+
 		q.push({ { current.x + 1, current.y }, elapsedTime + 1 });
 		q.push({ { current.x - 1, current.y }, elapsedTime + 1 });
 		q.push({ { current.x, current.y + 1 }, elapsedTime + 1 });
