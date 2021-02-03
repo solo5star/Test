@@ -33,9 +33,7 @@ void add(int position) {
 void remove(int position) {
 	int num = nums[position];
 
-	frequencies[counts[num]]--;
-
-	if (--frequencies[counts[num]] == 0) {
+	if (--frequencies[counts[num]] == 0 && counts[num] == maxValue) {
 		maxValue = max(0, maxValue - 1);
 	}
 
