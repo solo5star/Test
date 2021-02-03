@@ -16,35 +16,35 @@ vector<data_t> nums;
 vector<query> queries;
 data_t results[100000];
 
-query cachedQuery;
-data_t cachedResult;
-int cachedCounts[1000000];
+query cachedQuery = { 0, 0 };
+data_t cachedResult = 0;
+int cachedCounts[1000001];
 
 void add(int position) {
 	data_t num = nums[position];
 
-#ifdef DEBUG
-	cout << "+" << num << " ";
-#endif
-
 	cachedResult -= num * cachedCounts[num] * cachedCounts[num];
 	cachedCounts[num]++;
 	cachedResult += num * cachedCounts[num] * cachedCounts[num];
+
+#ifdef DEBUG
+	cout << "+" << num << " ";
+#endif
 }
 
 void remove(int position) {
 	data_t num = nums[position];
 
-#ifdef DEBUG
-	cout << "-" << num << " ";
-#endif
-
 	cachedResult -= num * cachedCounts[num] * cachedCounts[num];
 	cachedCounts[num]--;
 	cachedResult += num * cachedCounts[num] * cachedCounts[num];
+
+#ifdef DEBUG
+	cout << "-" << num << " ";
+#endif
 }
 
-data_t go_query(query& q) {
+data_t go_query(query q) {
 #ifdef DEBUG
 	cout << "QUERY " << q.left << "~" << q.right << "\n";
 	cout << "  NUMBERS: ";
