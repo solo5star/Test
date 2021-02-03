@@ -45,8 +45,8 @@ data_t calculate_query(query& q) {
 
 	// extending to left (Add nums)
 	while (q.left < cachedQuery.left) {
-		add(cachedQuery.left);
 		cachedQuery.left--;
+		add(cachedQuery.left);
 	}
 
 	// extending to right (Add nums)
@@ -57,8 +57,8 @@ data_t calculate_query(query& q) {
 
 	// shrink to left (Delete nums)
 	while (q.right < cachedQuery.right) {
-		remove(cachedQuery.right);
 		cachedQuery.right--;
+		remove(cachedQuery.right);
 	}
 
 #ifdef DEBUG
