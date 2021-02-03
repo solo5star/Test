@@ -21,27 +21,36 @@ data_t cachedResult;
 int cachedCounts[1000000];
 
 void add(int position) {
-	int num = nums[position];
+	data_t num = nums[position];
 
-	cachedResult -= pow(cachedCounts[num], 2) * num;
+#ifdef DEBUG
+	cout << "+" << num << " ";
+#endif
+
+	cachedResult -= num * cachedCounts[num] * cachedCounts[num];
 	cachedCounts[num]++;
-	cachedResult += pow(cachedCounts[num], 2) * num;
+	cachedResult += num * cachedCounts[num] * cachedCounts[num];
 }
 
 void remove(int position) {
-	int num = nums[position];
+	data_t num = nums[position];
 
-	cachedResult -= pow(cachedCounts[num], 2) * num;
+#ifdef DEBUG
+	cout << "-" << num << " ";
+#endif
+
+	cachedResult -= num * cachedCounts[num] * cachedCounts[num];
 	cachedCounts[num]--;
-	cachedResult += pow(cachedCounts[num], 2) * num;
+	cachedResult += num * cachedCounts[num] * cachedCounts[num];
 }
 
-data_t calculate_query(query& q) {
-	// shrink to right (Delete nums)
-	while (cachedQuery.left < q.left) {
-		remove(cachedQuery.left);
-		cachedQuery.left++;
-	}
+data_t go_query(query& q) {
+#ifdef DEBUG
+	cout << "QUERY " << q.left << "~" << q.right << "\n";
+	cout << "  NUMBERS: ";
+#endif
+
+	q.left--;
 
 	// extending to left (Add nums)
 	while (q.left < cachedQuery.left) {
@@ -55,6 +64,12 @@ data_t calculate_query(query& q) {
 		cachedQuery.right++;
 	}
 
+	// shrink to right (Delete nums)
+	while (cachedQuery.left < q.left) {
+		remove(cachedQuery.left);
+		cachedQuery.left++;
+	}
+
 	// shrink to left (Delete nums)
 	while (q.right < cachedQuery.right) {
 		cachedQuery.right--;
@@ -62,7 +77,7 @@ data_t calculate_query(query& q) {
 	}
 
 #ifdef DEBUG
-	cout << "QUERY " << q.left << "~" << q.right << ": " << cachedResult << "\n";
+	cout << "\n  RESULT: " << cachedResult << "\n";
 #endif
 
 	return cachedResult;
@@ -83,7 +98,7 @@ int main() {
 
 	for (int i = 0; i < t; i++) {
 		cin >> a >> b;
-		queries.push_back({ a - 1, b, i });
+		queries.push_back({ a, b, i });
 	}
 
 	// sqrt decomposition (sort)
@@ -96,10 +111,10 @@ int main() {
 	});
 
 	for (auto& query : queries) {
-		results[query.index] = calculate_query(query);
+		results[query.index] = go_query(query);
 	}
 
-	for (int i = 0; i < queries.size(); i++) {
+	for (int i = 0; i < t; i++) {
 		cout << results[i] << "\n";
 	}
 }
