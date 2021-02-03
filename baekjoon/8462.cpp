@@ -1,7 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <bits/stdc++.h>
-#include <unordered_map>
 
 using namespace std;
 
@@ -17,80 +16,54 @@ vector<data_t> nums;
 vector<query> queries;
 data_t results[100000];
 
-int numsLengthSqrt;
-
 query cachedQuery;
 data_t cachedResult;
-unordered_map<data_t, int> cachedNums;
-unordered_map<data_t, int> cachedNumsDiff;
+int cachedCounts[1000000];
+
+void add(int position) {
+	int num = nums[position];
+
+	cachedResult -= pow(cachedCounts[num], 2) * num;
+	cachedCounts[num]++;
+	cachedResult += pow(cachedCounts[num], 2) * num;
+}
+
+void remove(int position) {
+	int num = nums[position];
+
+	cachedResult -= pow(cachedCounts[num], 2) * num;
+	cachedCounts[num]--;
+	cachedResult += pow(cachedCounts[num], 2) * num;
+}
 
 data_t calculate_query(query& q) {
-	// Recalculate vs Using cache
-	if (q.right - q.left < abs(cachedQuery.left - q.left) + abs(cachedQuery.right - q.right)) {
-		cachedQuery = { 0, 0 };
-		cachedResult = 0;
-		cachedNums.clear();
+	// shrink to right (Delete nums)
+	while (cachedQuery.left < q.left) {
+		remove(cachedQuery.left);
+		cachedQuery.left++;
 	}
 
-	int num;
-
-	while (cachedQuery.left != q.left) {
-		num = nums[cachedQuery.left];
-		if (cachedNumsDiff.count(num) == 0) cachedNumsDiff[num] = 0;
-
-		// shrink to right (Delete nums)
-		if (cachedQuery.left < q.left) {
-			cachedNumsDiff[num]--;
-			cachedQuery.left++;
-		}
-		// extending to left (Add nums)
-		else {
-			cachedNumsDiff[num]++;
-			cachedQuery.left--;
-		}
+	// extending to left (Add nums)
+	while (q.left < cachedQuery.left) {
+		add(cachedQuery.left);
+		cachedQuery.left--;
 	}
 
-	while (q.right != cachedQuery.right) {
-		num = nums[cachedQuery.right];
-		if (cachedNumsDiff.count(num) == 0) cachedNumsDiff[num] = 0;
-
-		// extending to right (Add nums)
-		if (cachedQuery.right < q.right) {
-			cachedNumsDiff[num]++;
-			cachedQuery.right++;
-		}
-		// shrink to left (Delete nums)
-		else {
-			cachedNumsDiff[num]--;
-			cachedQuery.right--;
-		}
+	// extending to right (Add nums)
+	while (cachedQuery.right < q.right) {
+		add(cachedQuery.right);
+		cachedQuery.right++;
 	}
 
-	for (auto& it : cachedNumsDiff) {
-		if (cachedNums.count(it.first) != 0) {
-			cachedResult -= pow(cachedNums[it.first], 2) * it.first;
-			it.second += cachedNums[it.first];
-		}
-
-		if (it.second == 0) {
-			cachedNums.erase(it.first);
-		}
-		else {
-			cachedResult += pow(it.second, 2) * it.first;
-			cachedNums[it.first] = it.second;
-		}
+	// shrink to left (Delete nums)
+	while (q.right < cachedQuery.right) {
+		remove(cachedQuery.right);
+		cachedQuery.right--;
 	}
 
 #ifdef DEBUG
 	cout << "QUERY " << q.left << "~" << q.right << ": " << cachedResult << "\n";
-	cout << "  Numbers: ";
-	for (auto& it : cachedNumsDiff) {
-		cout << it.first << "(" << it.second << ") ";
-	}
-	cout << "\n";
 #endif
-
-	cachedNumsDiff.clear();
 
 	return cachedResult;
 }
@@ -103,7 +76,6 @@ int main() {
 	int n, t, a, b;
 	cin >> n >> t;
 
-	numsLengthSqrt = sqrt(n);
 	for (int i = 0; i < n; i++) {
 		cin >> a;
 		nums.push_back(a);
@@ -115,13 +87,12 @@ int main() {
 	}
 
 	// sqrt decomposition (sort)
-	sort(queries.begin(), queries.end(), [](const query& a, const query& b) -> bool {
+	int numsLengthSqrt = sqrt(nums.size());
+	sort(queries.begin(), queries.end(), [numsLengthSqrt](const query& a, const query& b) -> bool {
 		int aSqrt = a.left / numsLengthSqrt;
 		int bSqrt = b.left / numsLengthSqrt;
 
-		if (aSqrt != bSqrt) return aSqrt < bSqrt;
-
-		return a.right < b.right;
+		return aSqrt != bSqrt ? aSqrt < bSqrt : a.right < b.right;
 	});
 
 	for (auto& query : queries) {
