@@ -30,10 +30,10 @@ int main() {
 	}
 
 	sort(jewelries, jewelries + n, [](const jewelry& a, const jewelry& b) -> bool {
-		return a.price != b.price ? a.price > b.price : a.weight < b.weight;
+		return a.price != b.price ? a.price > b.price : a.weight > b.weight;
 	});
 
-	int sum = 0;
+	unsigned long long sum = 0;
 
 	for (int i = 0; i < n; i++) {
 		if (bags.empty()) break;
