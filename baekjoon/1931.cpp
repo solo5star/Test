@@ -27,7 +27,7 @@ int main() {
 		return a.end < b.end;
 	});
 
-	meet previous = { 0,0 };
+	meet previous = { -1,-1 };
 	int available = 0;
 	for (int i = 0; i < n; i++) {
 		if (previous.end < meets[i].start) {
