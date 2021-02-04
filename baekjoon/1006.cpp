@@ -31,7 +31,7 @@ int main() {
 			dp[0][ABOVE] = 0;
 			dp[0][BELOW] = 0;
 
-			if (allowsThrough) {
+			if (n >= 2 && allowsThrough) {
 				if (area[0][ABOVE] + area[n - 1][ABOVE] <= forces) {
 					dp[0][ABOVE] = 1;
 					area[0][ABOVE] = area[n - 1][ABOVE] = forces + 1;
