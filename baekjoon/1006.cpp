@@ -6,17 +6,29 @@ using namespace std;
 
 int area[10000][2];
 
-const int ABOVE = 0;
-const int BELOW = 1;
-const int STRETCH = 2;
+// First dimension: n-th column
+// Second dimension: state of blocks
 int dp[10000][3];
+
+// state: ABOVE (i=3)
+// ■■■
+// ■■■■
+const int ABOVE = 0;
+
+// state: BELOW (i=3)
+// ■■■■
+// ■■■
+const int BELOW = 1;
+
+// state: STRETCH (i=3)
+// ■■■■
+// ■■■■
+const int STRETCH = 2;
 
 int main() {
 	ios::sync_with_stdio(false);
 	cin.tie(nullptr);
 	cout.tie(nullptr);
-
-	//freopen("1.in", "r", stdin);
 
 	int t;
 	cin >> t;
@@ -28,13 +40,14 @@ int main() {
 		for (int i = 0; i < n; i++) cin >> area[i][1];
 
 		int maxValue = 0;
-		int edge[2][2];
 
 		// remember edge values
-		edge[0][0] = area[0][0];
-		edge[0][1] = area[0][1];
-		edge[1][0] = area[n - 1][0];
-		edge[1][1] = area[n - 1][1];
+		int edge[2][2] = {
+			area[0][0],
+			area[0][1],
+			area[n - 1][0],
+			area[n - 1][1]
+		};
 
 		for (int stage = 0; stage < (n == 1 ? 1 : 4); stage++) {
 			// restore edge
@@ -50,10 +63,25 @@ int main() {
 			bool throughBelow = false;
 
 			switch (stage) {
-			case 0: break;
-			case 1: throughAbove = true;  break;
-			case 2: throughBelow = true;  break;
-			case 3: throughAbove = throughBelow = true; break;
+				// Case 0: Do not allow through 0 and n - 1
+				// ■■■■■■■
+				// ■■■■■■■
+				case 0: break;
+
+				// Case 1: Through 0 and n - 1 are allowed to above blocks
+				// □■■■■■□
+				// ■■■■■■■
+				case 1: throughAbove = true;  break;
+
+				// Case 2: Through 0 and n - 1 are allowed to below blocks
+				// ■■■■■■■
+				// □■■■■■□
+				case 2: throughBelow = true;  break;
+
+				// Case 3: Through 0 and n - 1 are allowed to both above and below
+				// □■■■■■□
+				// □■■■■■□
+				case 3: throughAbove = throughBelow = true; break;
 			}
 
 			// Through ABOVE
