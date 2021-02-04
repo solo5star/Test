@@ -35,8 +35,10 @@ int main() {
 
 	int sum = 0;
 
-	for (int i = 0; i < k; i++) {
-		auto it = lower_bound(bags.begin(), bags.end(), jewelries[i].weight);
+	for (int i = 0; i < n; i++) {
+		if (bags.empty()) break;
+
+		auto it = bags.lower_bound(jewelries[i].weight);
 
 		if (*it < jewelries[i].weight) continue;
 
