@@ -24,7 +24,7 @@ int main() {
 	}
 
 	sort(meets, meets + n, [](const meet& a, const meet& b) -> bool {
-		return a.end < b.end;
+		return a.end != b.end ? a.end < b.end : a.start < b.start;
 	});
 
 	meet previous = { -1,-1 };
