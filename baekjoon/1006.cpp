@@ -28,10 +28,13 @@ int main() {
 		for (int i = 0; i < n; i++) cin >> area[i][1];
 
 		int maxValue = 0;
-		int edge[2][2] = {
-			{ area[0][0], area[0][1] },
-			{ area[n - 1][0], area[n - 1][1] }
-		};
+		int edge[2][2];
+
+		// remember edge values
+		edge[0][0] = area[0][0];
+		edge[0][1] = area[0][1];
+		edge[1][0] = area[n - 1][0];
+		edge[1][1] = area[n - 1][1];
 
 		for (int stage = 0; stage < (n >= 2 ? 4 : 1); stage++) {
 			// restore edge
@@ -64,11 +67,10 @@ int main() {
 				area[0][BELOW] = area[n - 1][BELOW] = forces + 1;
 			}
 
-			dp[0][STRETCH] = max({
-				dp[0][ABOVE],
-				dp[0][BELOW],
+			dp[0][STRETCH] = max(
+				dp[0][ABOVE] + dp[0][BELOW],
 				(int)(area[0][ABOVE] + area[0][BELOW] <= forces)
-			});
+			);
 
 			// ■: PREVIOUS
 			// □: CURRENT
@@ -101,7 +103,7 @@ int main() {
 
 					// ■■□□
 					// ■■□□
-					i > 1 ? dp[i - 2][STRETCH] + (area[i - 1][BELOW] + area[i][BELOW] <= forces) + (area[i - 1][ABOVE] + area[i][ABOVE] <= forces) : 0
+					(i > 1 ? dp[i - 2][STRETCH] : 0) + (area[i - 1][BELOW] + area[i][BELOW] <= forces) + (area[i - 1][ABOVE] + area[i][ABOVE] <= forces)
 				);
 			}
 
