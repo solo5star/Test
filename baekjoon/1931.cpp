@@ -30,7 +30,7 @@ int main() {
 	meet previous = { -1,-1 };
 	int available = 0;
 	for (int i = 0; i < n; i++) {
-		if (previous.end < meets[i].start) {
+		if (previous.end <= meets[i].start) {
 			previous = meets[i];
 			available++;
 		}
