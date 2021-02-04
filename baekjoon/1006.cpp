@@ -16,6 +16,8 @@ int main() {
 	cin.tie(nullptr);
 	cout.tie(nullptr);
 
+	//freopen("1.in", "r", stdin);
+
 	int t;
 	cin >> t;
 	while (t--) {
@@ -26,20 +28,40 @@ int main() {
 		for (int i = 0; i < n; i++) cin >> area[i][1];
 
 		int maxValue = 0;
+		int edge[2][2] = {
+			{ area[0][0], area[0][1] },
+			{ area[n - 1][0], area[n - 1][1] }
+		};
 
-		for (int allowsThrough = 0; allowsThrough <= 1; allowsThrough++) {
+		for (int stage = 0; stage < (n >= 2 ? 4 : 1); stage++) {
+			// restore edge
+			area[0][0] = edge[0][0];
+			area[0][1] = edge[0][1];
+			area[n - 1][0] = edge[1][0];
+			area[n - 1][1] = edge[1][1];
+
 			dp[0][ABOVE] = 0;
 			dp[0][BELOW] = 0;
 
-			if (n >= 2 && allowsThrough) {
-				if (area[0][ABOVE] + area[n - 1][ABOVE] <= forces) {
-					dp[0][ABOVE] = 1;
-					area[0][ABOVE] = area[n - 1][ABOVE] = forces + 1;
-				}
-				if (area[0][BELOW] + area[n - 1][BELOW] <= forces) {
-					dp[0][BELOW] = 1;
-					area[0][BELOW] = area[n - 1][BELOW] = forces + 1;
-				}
+			bool throughAbove = false;
+			bool throughBelow = false;
+
+			switch (stage) {
+			case 1: throughAbove = true;  break;
+			case 2: throughBelow = true;  break;
+			case 3: throughAbove = throughBelow = true; break;
+			}
+
+			// Through ABOVE
+			if (throughAbove && area[0][ABOVE] + area[n - 1][ABOVE] <= forces) {
+				dp[0][ABOVE] = 1;
+				area[0][ABOVE] = area[n - 1][ABOVE] = forces + 1;
+			}
+
+			// Through BELOW
+			if (throughBelow && area[0][BELOW] + area[n - 1][BELOW] <= forces) {
+				dp[0][BELOW] = 1;
+				area[0][BELOW] = area[n - 1][BELOW] = forces + 1;
 			}
 
 			dp[0][STRETCH] = max({
