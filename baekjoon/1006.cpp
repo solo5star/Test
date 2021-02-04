@@ -36,7 +36,7 @@ int main() {
 		edge[1][0] = area[n - 1][0];
 		edge[1][1] = area[n - 1][1];
 
-		for (int stage = 0; stage < (n >= 2 ? 4 : 1); stage++) {
+		for (int stage = 0; stage < (n == 1 ? 1 : 4); stage++) {
 			// restore edge
 			area[0][0] = edge[0][0];
 			area[0][1] = edge[0][1];
@@ -50,6 +50,7 @@ int main() {
 			bool throughBelow = false;
 
 			switch (stage) {
+			case 0: break;
 			case 1: throughAbove = true;  break;
 			case 2: throughBelow = true;  break;
 			case 3: throughAbove = throughBelow = true; break;
@@ -96,15 +97,18 @@ int main() {
 					dp[i - 1][STRETCH]
 				);
 
-				dp[i][STRETCH] = max(
+				dp[i][STRETCH] = max({
 					// ■■■□
 					// ■■■□
 					dp[i - 1][STRETCH] + (area[i][BELOW] + area[i][ABOVE] <= forces),
 
+					dp[i][ABOVE],
+					dp[i][BELOW],
+
 					// ■■□□
 					// ■■□□
 					(i > 1 ? dp[i - 2][STRETCH] : 0) + (area[i - 1][BELOW] + area[i][BELOW] <= forces) + (area[i - 1][ABOVE] + area[i][ABOVE] <= forces)
-				);
+				});
 			}
 
 			maxValue = max({
