@@ -23,25 +23,23 @@ int toggleCounter[10][10];
 bool board[10][10];
 int lived = 0;
 
-unordered_set<int> points[6];
+set<int> points[6];
 
 void addPriority(int x, int y, int value) {
 	if (x < 0 || y < 0 || x >= 10 || y >= 10) return;
 
 	int priority = priorities[y][x];
-	if (priority) {
-		points[priority].erase(makeHash({ x, y }));
-	}
+
+	if (priority) points[priority].erase(makeHash({ x, y }));
 
 	priority = (priorities[y][x] += value);
 
-	if (priority) {
-		points[priority].insert(makeHash({ x, y }));
-	}
+	if (priority) points[priority].insert(makeHash({ x, y }));
 }
 
 void toggle(int x, int y) {
 	if (x < 0 || y < 0 || x >= 10 || y >= 10) return;
+
 	// on -> off
 	// off -> on
 	int w = (board[y][x] = !board[y][x]) ? 1 : -1;
@@ -56,14 +54,13 @@ void toggle(int x, int y) {
 }
 
 int turnOffAllHighestPriority() {
-	int highestPriority = 0;
-	for (int i = 1; i <= 5; i++) {
-		if (points[i].size()) highestPriority = i;
-	}
-
 	queue<point> q;
-	for (int pHash : points[highestPriority]) {
-		q.push(fromHash(pHash));
+
+	for (int i = 5; i > 0; i--) {
+		if (points[i].size()) {
+			q.push(fromHash(*points[i].begin()));
+			break;
+		}
 	}
 
 	int count = 0;
@@ -73,7 +70,6 @@ int turnOffAllHighestPriority() {
 		q.pop();
 
 		count++;
-		if (++toggleCounter[p.y][p.x] >= 2) return -1;
 
 		toggle(p.x, p.y);
 		toggle(p.x + 1, p.y);
@@ -90,7 +86,25 @@ int turnOffAllHighestPriority() {
 			cout << "\n";
 		}
 		cout << "TOGGLE (" << p.x << ", " << p.y << ")\n";
+
+		for (int y = 0; y < 10; y++) {
+			for (int x = 0; x < 10; x++) {
+				cout << priorities[y][x] << " ";
+			}
+			cout << "\n";
+		}
 #endif
+
+		if (lived == 0) break;
+
+		if (++toggleCounter[p.y][p.x] >= 2) return -1;
+
+		for (int i = 5; i > 0; i--) {
+			if (points[i].size()) {
+				q.push(fromHash(*points[i].begin()));
+				break;
+			}
+		}
 	}
 
 	return count;
