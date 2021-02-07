@@ -32,8 +32,9 @@ int main() {
 			dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
 
 			if (things[i].weight <= j) {
-				if (dp[i][j] < dp[i][j - things[i].weight] + things[i].price) {
-					dp[i][j] = dp[i][j - things[i].weight] + things[i].price;
+				// previous thing with backpack weight=(j - weight)
+				if (dp[i][j] < dp[i - 1][j - things[i].weight] + things[i].price) {
+					dp[i][j] = dp[i - 1][j - things[i].weight] + things[i].price;
 				}
 			}
 		}
