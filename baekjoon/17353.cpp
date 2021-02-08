@@ -7,7 +7,7 @@ using namespace std;
 struct {
 	int num;
 	int queriesAccumulated;
-} tree[131072];
+} tree[262144];
 int nums[100000];
 int length;
 
