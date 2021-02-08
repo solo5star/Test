@@ -4,8 +4,10 @@
 
 using namespace std;
 
+using data_t = long long;
+
 struct {
-	int num;
+	data_t num;
 	int queriesAccumulated;
 } tree[262144];
 int nums[100000];
@@ -36,19 +38,19 @@ void update(int begin, int end) {
 	update(1, 0, length - 1, begin, end);
 }
 
-int query(int node, int left, int right, int index) {
+data_t query(int node, int left, int right, int index) {
 	if (index < left || right < index) return 0;
 
 	if (left == right) return tree[node].num;
 
 	int mid = (left + right) / 2;
 
-	return tree[node].num + (tree[node].queriesAccumulated * (index - left))
+	return tree[node].num + ((data_t)tree[node].queriesAccumulated * (index - left))
 		+ query(node * 2, left, mid, index)
 		+ query(node * 2 + 1, mid + 1, right, index);
 }
 
-int query(int index) {
+data_t query(int index) {
 	return nums[index] + query(1, 0, length - 1, index);
 }
 
